@@ -1,9 +1,9 @@
 use actix_web::{get, HttpResponse, post, web};
 use actix_web::web::{Json, Path};
+use crate::app::db_ops::DbOps;
 use crate::infrastructure::Db;
 use crate::infrastructure::external_query::get_geolocation;
 use crate::models::Ip;
-use crate::infrastructure::mongodb::DbOps;
 
 #[post("/insert")]
 pub async fn insert_ip(db: web::Data<Db>, ip: Json<Ip>) -> HttpResponse {
@@ -14,7 +14,9 @@ pub async fn insert_ip(db: web::Data<Db>, ip: Json<Ip>) -> HttpResponse {
 
     let result = db.insert_ip(&ip_geolocation).await;
     match result {
-        Ok(ip_id) => HttpResponse::Ok().body(format!("Ip {} saved with mongo uuid: {}", data.ip, ip_id.to_hex())),
+        Ok(ip_id) => HttpResponse::Ok().body(
+            format!("Ip {} saved with mongo uuid: {}", data.ip, ip_id.to_hex())
+        ),
         Err(_) => HttpResponse::InternalServerError().body("Error to insert the IP"),
     }
 }
