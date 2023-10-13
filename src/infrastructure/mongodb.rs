@@ -1,9 +1,12 @@
+use std::time::Duration;
 use bson::oid::ObjectId;
 use mongodb::{Client, Collection};
 use mongodb::error::Error;
 use async_trait::async_trait;
 use bson::doc;
 use crate::app::db_ops::DbOps;
+use mongodb::options::{ClientOptions, ResolverConfig};
+use mongodb::results::DeleteResult;
 use crate::models::{GeoLocation};
 
 // Required fields for mongodb client and collection setup
@@ -15,8 +18,22 @@ pub struct Db {
 // Initiate the constructor for Db struct
 impl Db {
     pub async fn new(connection_url: String, database: String, collection: String) -> Result<Self, mongodb::error::Error> {
-        let client = Client::with_uri_str(connection_url).await?;
+        // A Client is needed to connect to MongoDB:
+        // An extra line of code to work around a DNS issue on Windows
+        let mut options =
+            ClientOptions::parse_with_resolver_config(&connection_url, ResolverConfig::cloudflare())
+                .await?;
+
+        // If server don't respond in 3 seconds, panic!
+        options.server_selection_timeout = Some(Duration::from_secs(2));
+
+        let client = Client::with_options(options)?;
+
         let database = client.database(&database);
+
+        // Send a ping to confirm a successful connection
+        database.run_command(doc! { "ping": 1 }, None).await?;
+
         let collection = database.collection(&collection);
 
         Ok(Db { collection })
@@ -30,7 +47,11 @@ impl DbOps for Db {
         Ok(result.inserted_id.as_object_id().unwrap())
     }
     async fn get_ip(&self, ip: String) ->  Result<Option<GeoLocation>, Error> {
-        let ip_geolocation = self.collection.find_one(doc! { "query": &ip }, None).await?;
-        Ok(ip_geolocation)
+        let get_geolocation = self.collection.find_one(doc! { "query": &ip }, None).await?;
+        Ok(get_geolocation)
+    }
+    async fn delete_ip(&self, ip: String) -> Result<DeleteResult, Error> {
+        let delete_result = self.collection.delete_one(doc! { "query": &ip }, None).await?;
+        Ok(delete_result)
     }
 }
