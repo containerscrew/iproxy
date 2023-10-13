@@ -1,9 +1,9 @@
-use actix_web::{get, HttpResponse, post, web};
+use actix_web::{delete, get, HttpResponse, post, put, web};
 use actix_web::web::{Json, Path};
 use crate::infrastructure::Db;
 use crate::infrastructure::external_query::get_geolocation;
-use crate::models::Ip;
 use crate::infrastructure::mongodb::DbOps;
+use crate::models::Ip;
 
 #[post("/insert")]
 pub async fn insert_ip(db: web::Data<Db>, ip: Json<Ip>) -> HttpResponse {
@@ -20,7 +20,7 @@ pub async fn insert_ip(db: web::Data<Db>, ip: Json<Ip>) -> HttpResponse {
 }
 
 #[get("/get/{ip}")]
-async fn get_ip(db: web::Data<Db>, ip: Path<String>) -> HttpResponse {
+pub async fn get_ip(db: web::Data<Db>, ip: Path<String>) -> HttpResponse {
     let ip = ip.into_inner();
     let result = db.get_ip(ip).await;
 
@@ -30,6 +30,22 @@ async fn get_ip(db: web::Data<Db>, ip: Path<String>) -> HttpResponse {
             HttpResponse::NotFound().body(format!("No data found for requested data"))
         }
         Err(_) => HttpResponse::InternalServerError().body("Error getting IP address"),
+    }
+}
+
+#[put("/update/{ip}")]
+async fn update_ip(db: web::Data<Db>, ip: Path<String>) -> HttpResponse {
+    HttpResponse::Ok().body("Ip updated :)")
+}
+
+#[delete("/delete/{ip}")]
+pub async fn delete_ip(db: web::Data<Db>, ip: Path<String>) -> HttpResponse{
+    let ip = ip.into_inner();
+    let result = db.delete_ip(ip).await;
+
+    match result {
+        Ok(count) => HttpResponse::Ok().body(format!("Ip deleted. Count: {}", count.deleted_count)),
+        Err(_) =>  HttpResponse::InternalServerError().body("Error deleting IP address"),
     }
 }
 
