@@ -4,7 +4,6 @@ mod models;
 mod app;
 
 use std::env;
-use std::string::ToString;
 use std::sync::Arc;
 use actix_web::{App, HttpServer, web};
 use actix_web::dev::Server;
