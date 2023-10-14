@@ -5,7 +5,6 @@
 - [DEPENDENCIES](#dependencies)
 - [TO DO](#to-do)
 - [Running in local](#running-in-local)
-- [Async trait](#async-trait)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -29,9 +28,3 @@ Other not used, need registration for token:
 docker-compose -f compose.yml up -d # start mongodb local server
 cargo run --
 ```
-
-# Async trait
-
-Officially not implemented, but exists a crate: https://github.com/dtolnay/async-trait
-
-[Documentation](https://rust-lang.github.io/async-book/07_workarounds/05_async_in_traits.html)
