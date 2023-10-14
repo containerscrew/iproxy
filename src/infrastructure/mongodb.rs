@@ -1,17 +1,19 @@
 use std::time::Duration;
 use bson::oid::ObjectId;
-use mongodb::{Client, Collection};
+use mongodb::{Client, Collection, Database, IndexModel};
 use mongodb::error::Error;
 use async_trait::async_trait;
 use bson::doc;
 use crate::app::db_ops::DbOps;
-use mongodb::options::{ClientOptions, ResolverConfig};
+use mongodb::options::{ClientOptions, IndexOptions, ResolverConfig};
 use mongodb::results::DeleteResult;
 use crate::models::{GeoLocation};
 
 // Required fields for mongodb client and collection setup
 #[derive(Clone)]
 pub struct Db {
+    client: Client,
+    database: Database,
     collection: Collection<GeoLocation>,
 }
 
@@ -24,8 +26,10 @@ impl Db {
             ClientOptions::parse_with_resolver_config(&connection_url, ResolverConfig::cloudflare())
                 .await?;
 
+        // Some connection config from ClientOptions struct
         // If server don't respond in 3 seconds, panic!
         options.server_selection_timeout = Some(Duration::from_secs(2));
+        options.app_name = Some("ipfinder".to_string());
 
         let client = Client::with_options(options)?;
 
@@ -36,7 +40,21 @@ impl Db {
 
         let collection = database.collection(&collection);
 
-        Ok(Db { collection })
+        Ok(Db { client, database, collection })
+    }
+    // Creates an index on the "ip" field to force the values to be unique.
+    pub async fn create_ips_index(&self) {
+        let options = IndexOptions::builder().unique(true).build();
+        let model = IndexModel::builder()
+            .keys(doc! { "ip": 1 })
+            .options(options)
+            .build();
+        self.client
+            .database(self.database.name())
+            .collection::<GeoLocation>(self.collection.name())
+            .create_index(model, None)
+            .await
+            .expect("creating an index should succeed");
     }
 }
 

@@ -32,6 +32,9 @@ async fn main() -> std::io::Result<()> {
        collection_name
     ).await.expect("Can't connect to database"));
 
+    // Create index
+    db.create_ips_index().await;
+
     start_server(db).await
 }
 
