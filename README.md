@@ -12,6 +12,9 @@
 # DEPENDENCIES
 
 * Using external database: `http://ip-api.com/json/{ip}`
+Other not used, need registration for token:
+* https://www.maxmind.com/en/home
+* https://ipstack.com/
 
 # TO DO
 
