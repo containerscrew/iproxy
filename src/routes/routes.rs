@@ -2,7 +2,6 @@ use std::sync::Arc;
 use actix_web::{delete, get, HttpResponse, post, put, web};
 use actix_web::web::{Json, Path};
 use crate::app::db_ops::DbOps;
-use crate::infrastructure::Db;
 use crate::infrastructure::external_query::get_geolocation;
 use crate::models::Ip;
 
