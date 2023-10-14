@@ -4,10 +4,10 @@ use mongodb::{Client, Collection};
 use mongodb::error::Error;
 use async_trait::async_trait;
 use bson::doc;
+use crate::app::db_ops::DbOps;
 use mongodb::options::{ClientOptions, ResolverConfig};
 use mongodb::results::DeleteResult;
 use crate::models::{GeoLocation};
-
 
 // Required fields for mongodb client and collection setup
 #[derive(Clone)]
@@ -38,16 +38,6 @@ impl Db {
 
         Ok(Db { collection })
     }
-}
-
-#[async_trait]
-pub trait DbOps {
-    async fn insert_ip(&self, geolocation: &GeoLocation) -> Result<ObjectId, Error>;
-    // To be implemented
-    //async fn update_ip(&self) ;
-    async fn get_ip(&self, ip: String) ->  Result<Option<GeoLocation>, Error>;
-    async fn delete_ip(&self, ip: String) -> Result<DeleteResult, Error>;
-
 }
 
 #[async_trait]
