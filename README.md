@@ -15,12 +15,15 @@
 
 # TO DO
 
-* resync existing database ip information with external database
-* when querying for the geolocation of an ip, check first if exist in database
+* improve error handling and logging with env_logger (custom error handling)
+* implement update function in CRUD
+* middleware with API authentication?
+* testing like here: https://github.com/actix/examples/blob/master/databases/mongodb/src/test.rs
 
 # Running in local
 
 ```bash
+docker-compose -f compose.yml up -d # start mongodb local server
 cargo run --
 ```
 

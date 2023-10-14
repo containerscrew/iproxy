@@ -17,7 +17,7 @@ pub async fn insert_ip(db: web::Data<Arc<dyn DbOps+Send+Sync>>, ip: Json<Ip>) ->
         Ok(ip_id) => HttpResponse::Ok().body(
             format!("Ip {} saved with mongo uuid: {}", data.ip, ip_id.to_hex())
         ),
-        Err(_) => HttpResponse::InternalServerError().body("Error to insert the IP"),
+        Err(_) => HttpResponse::InternalServerError().body("Duplicated entry!"),
     }
 }
 
@@ -31,7 +31,7 @@ pub async fn get_ip(db: web::Data<Arc<dyn DbOps+Send+Sync>>, ip: Path<String>) -
         Ok(None) => {
             HttpResponse::NotFound().body(format!("No data found for requested data"))
         }
-        Err(_) => HttpResponse::InternalServerError().body("Error getting IP address"),
+        Err(_) => HttpResponse::InternalServerError().json("Error getting IP address"),
     }
 }
 
