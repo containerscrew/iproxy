@@ -14,6 +14,7 @@ use log::{info};
 use crate::app::db_ops::DbOps;
 use crate::infrastructure::{Db};
 use crate::routes::{delete_ip, get_ip, health, insert_ip};
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     get_env();
