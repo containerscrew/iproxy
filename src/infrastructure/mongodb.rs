@@ -5,7 +5,7 @@ use mongodb::error::Error;
 use async_trait::async_trait;
 use bson::doc;
 use crate::app::db_ops::DbOps;
-use mongodb::options::{ClientOptions, IndexOptions, ResolverConfig};
+use mongodb::options::{ClientOptions, IndexOptions, ResolverConfig, ServerApi, ServerApiVersion};
 use mongodb::results::DeleteResult;
 use crate::models::{GeoLocation};
 
@@ -22,16 +22,27 @@ impl Db {
     pub async fn new(connection_url: String, database: String, collection: String) -> Result<Self, mongodb::error::Error> {
         // A Client is needed to connect to MongoDB:
         // An extra line of code to work around a DNS issue on Windows
-        let mut options =
-            ClientOptions::parse_with_resolver_config(&connection_url, ResolverConfig::cloudflare())
-                .await?;
+        // let mut options =
+        //     ClientOptions::parse_with_resolver_config(&connection_url, ResolverConfig::cloudflare())
+        //         .await?;
+        //
+        // // Some connection config from ClientOptions struct
+        // // If server don't respond in 3 seconds, panic!
+        // options.server_selection_timeout = Some(Duration::from_secs(3));
+        // options.app_name = Some("ipfinder".to_string());
+        //
+        // let client = Client::with_options(options)?;
 
-        // Some connection config from ClientOptions struct
-        // If server don't respond in 3 seconds, panic!
-        options.server_selection_timeout = Some(Duration::from_secs(2));
-        options.app_name = Some("ipfinder".to_string());
+        let mut client_options = ClientOptions::parse(connection_url).await?;
+        client_options.server_selection_timeout = Some(Duration::from_secs(3));
+        client_options.app_name = Some("ipfinder".to_string());
 
-        let client = Client::with_options(options)?;
+        // Set the server_api field of the client_options object to Stable API version 1
+        let server_api = ServerApi::builder().version(ServerApiVersion::V1).build();
+        client_options.server_api = Some(server_api);
+
+        // Create a new client and connect to the server
+        let client = Client::with_options(client_options)?;
 
         let database = client.database(&database);
 
@@ -46,7 +57,7 @@ impl Db {
     pub async fn create_ips_index(&self) {
         let options = IndexOptions::builder().unique(true).build();
         let model = IndexModel::builder()
-            .keys(doc! { "ip": 1 })
+            .keys(doc! { "query": 1 })
             .options(options)
             .build();
         self.client

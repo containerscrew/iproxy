@@ -31,7 +31,7 @@ pub async fn get_ip(db: web::Data<Arc<dyn DbOps+Send+Sync>>, ip: Path<String>) -
         Ok(None) => {
             HttpResponse::NotFound().body(format!("No data found for requested data"))
         }
-        Err(_) => HttpResponse::InternalServerError().json("Error getting IP address"),
+        Err(err) => HttpResponse::InternalServerError().body(format!("{}", err)),
     }
 }
 

@@ -18,6 +18,6 @@ pub struct GeoLocation {
     org: String,
     #[serde(rename = "as")]
     ass: String,
-    #[serde(rename(serialize = "ip", deserialize = "query"))]
+    //#[serde(rename(serialize = "ip", deserialize = "query"))]
     query: String,
 }
