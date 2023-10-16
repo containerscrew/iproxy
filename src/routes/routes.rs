@@ -37,7 +37,17 @@ pub async fn get_ip(db: web::Data<Arc<dyn DbOps+Send+Sync>>, ip: Path<String>) -
 
 #[put("/update/{ip}")]
 async fn update_ip(db: web::Data<Arc<dyn DbOps+Send+Sync>>, ip: Path<String>) -> HttpResponse {
-    HttpResponse::Ok().body("Ip updated :)")
+    let ip = ip.into_inner();
+
+    // Get external data of ip geolocation
+    let ip_geolocation = get_geolocation(&ip).await.expect("Can't fetch data from external ip-api");
+
+    let result = db.update_ip(ip, &ip_geolocation).await;
+
+    match result {
+        Ok(count) => HttpResponse::Ok().body(format!("Ip updated. Count: {}", count.matched_count)),
+        Err(err) => HttpResponse::InternalServerError().body(format!("Error updating ip address: {}", err.kind.to_string()))
+    }
 }
 
 #[delete("/delete/{ip}")]
