@@ -29,6 +29,7 @@
   - [Updating IP info](#updating-ip-info)
   - [Delete IP data](#delete-ip-data)
   - [API alive?](#api-alive)
+  - [Visualize](#visualize)
 - [TO DO](#to-do)
 - [Contribution](#contribution)
 - [LICENSE](#license)
@@ -59,13 +60,15 @@ When you start the API, it accepts all 4 CRUD methods of a simple API. Insert, g
 
 * Rust
 * Cargo
+* MongoDB
 
 Take a look to the [official documentation](https://www.rust-lang.org/tools/install)
 
 ## Clone the repository:
 
 ```bash
-https://github.com/containerscrew/ipfinder.git
+git clone https://github.com/containerscrew/ipfinder.git
+cd ipfinder
 ```
 
 ## Set your .env file with the necessary credentials
@@ -77,16 +80,21 @@ COLLECTION_NAME="ips"
 RUST_LOG="actix_web=debug"
 ```
 
-## Start your local mongodb using a container
-
-```bash
-docker-compose -f compose.yml up -d
-```
-
 If you are using mongodb atlas, just set the endpoint that you get from the mongodb atlas console:
 
 ```dotenv
 DB_ENDPOINT="mongodb+srv://XXXX:XXXXX@XXXX.XXXXX.mongodb.net/?retryWrites=true&w=majority"
+DB_NAME="ipfinder"
+COLLECTION_NAME="ips"
+RUST_LOG="actix_web=debug"
+```
+
+If not, run the container locally
+
+## Start your local mongodb using a container
+
+```bash
+docker-compose -f compose.yml up -d
 ```
 
 # Running in local
@@ -163,6 +171,13 @@ curl -XDELETE http://127.0.0.1:8081/api/v1/ipfinder/delete/8.8.8.8
 ```shell
 curl -XGET http://127.0.0.1:8081/api/v1/ipfinder/health
 ```
+
+## Visualize
+
+Using [mongodb compass](https://www.mongodb.com/products/tools/compass) you can visualize your data from the collection `ips`
+
+![data](assets/mongo_data.png)
+
 
 # TO DO
 
