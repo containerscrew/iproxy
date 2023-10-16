@@ -10,16 +10,15 @@ use actix_web::dev::Server;
 use actix_web::middleware::Logger;
 use dotenv::dotenv;
 use env_logger::Env;
-use log::{info};
 use crate::app::db_ops::DbOps;
 use crate::infrastructure::{Db};
-use crate::routes::{delete_ip, get_ip, health, insert_ip};
+use crate::routes::{delete_ip, get_ip, health, insert_ip, update_ip};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     get_env();
 
-    info!("Starting ipfinder...");
+    println!("Ipfinder API started!");
 
     // Load env variables with mongodb config
     let db_endpoint : String= env::var("DB_ENDPOINT").expect("You must set the DB_ENDPOINT environment var!");
@@ -58,9 +57,10 @@ fn start_server(db: Arc<dyn DbOps+Send+Sync>) -> Server {
                 .service(health)
                 .service(insert_ip)
                 .service(get_ip)
+                .service(update_ip)
                 .service(delete_ip)
         )
-    }).workers(2)
+    }).workers(5)
         .bind(("127.0.0.1", 8081)).expect("Unable to bind address!")
         .shutdown_timeout(30)
         .run()

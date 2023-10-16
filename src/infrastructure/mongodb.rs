@@ -3,10 +3,10 @@ use bson::oid::ObjectId;
 use mongodb::{Client, Collection, Database, IndexModel};
 use mongodb::error::Error;
 use async_trait::async_trait;
-use bson::doc;
+use bson::{doc, to_document};
 use crate::app::db_ops::DbOps;
-use mongodb::options::{ClientOptions, IndexOptions, ResolverConfig, ServerApi, ServerApiVersion};
-use mongodb::results::DeleteResult;
+use mongodb::options::{ClientOptions, IndexOptions, ServerApi, ServerApiVersion};
+use mongodb::results::{DeleteResult, UpdateResult};
 use crate::models::{GeoLocation};
 
 // Required fields for mongodb client and collection setup
@@ -20,19 +20,6 @@ pub struct Db {
 // Initiate the constructor for Db struct
 impl Db {
     pub async fn new(connection_url: String, database: String, collection: String) -> Result<Self, mongodb::error::Error> {
-        // A Client is needed to connect to MongoDB:
-        // An extra line of code to work around a DNS issue on Windows
-        // let mut options =
-        //     ClientOptions::parse_with_resolver_config(&connection_url, ResolverConfig::cloudflare())
-        //         .await?;
-        //
-        // // Some connection config from ClientOptions struct
-        // // If server don't respond in 3 seconds, panic!
-        // options.server_selection_timeout = Some(Duration::from_secs(3));
-        // options.app_name = Some("ipfinder".to_string());
-        //
-        // let client = Client::with_options(options)?;
-
         let mut client_options = ClientOptions::parse(connection_url).await?;
         client_options.server_selection_timeout = Some(Duration::from_secs(3));
         client_options.app_name = Some("ipfinder".to_string());
@@ -53,6 +40,7 @@ impl Db {
 
         Ok(Db { client, database, collection })
     }
+
     // Creates an index on the "ip" field to force the values to be unique.
     pub async fn create_ips_index(&self) {
         let options = IndexOptions::builder().unique(true).build();
@@ -75,12 +63,18 @@ impl DbOps for Db {
         let result = self.collection.insert_one(geolocation, None).await?;
         Ok(result.inserted_id.as_object_id().unwrap())
     }
-    async fn get_ip(&self, ip: String) ->  Result<Option<GeoLocation>, Error> {
+    async fn get_ip(&self, ip: String) -> Result<Option<GeoLocation>, Error> {
         let get_geolocation = self.collection.find_one(doc! { "query": &ip }, None).await?;
         Ok(get_geolocation)
     }
     async fn delete_ip(&self, ip: String) -> Result<DeleteResult, Error> {
         let delete_result = self.collection.delete_one(doc! { "query": &ip }, None).await?;
         Ok(delete_result)
+    }
+    async fn update_ip(&self, ip: String, geolocation: &GeoLocation) -> Result<UpdateResult, Error> {
+        let geolocation_bson = to_document(geolocation)?;
+
+        let update_result = self.collection.update_one(doc! {"query": &ip}, geolocation_bson, None).await?;
+        Ok(update_result)
     }
 }
