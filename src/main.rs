@@ -3,6 +3,9 @@ mod routes;
 mod models;
 mod app;
 
+#[cfg(test)]
+mod test;
+
 use std::env;
 use std::sync::Arc;
 use actix_web::{App, HttpServer, web};
@@ -38,7 +41,7 @@ async fn main() -> std::io::Result<()> {
     start_server(db).await
 }
 
-fn get_env() {
+pub fn get_env() {
     env::set_var("RUST_LOG", "actix_web=debug");
     dotenv().ok();
 
@@ -50,7 +53,6 @@ fn start_server(db: Arc<dyn DbOps+Send+Sync>) -> Server {
     HttpServer::new(move || {
         App::new().service(
             web::scope("/api/v1/ipfinder")
-                //.app_data(web::Data::new(Arc::from(database_config))
                 .app_data(web::Data::new(db.clone()))
                 .wrap(Logger::default())
                 .wrap(Logger::new("%a %{User-Agent}i"))
