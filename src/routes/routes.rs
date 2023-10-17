@@ -14,9 +14,7 @@ pub async fn insert_ip(db: web::Data<Arc<dyn DbOps+Send+Sync>>, ip: Json<Ip>) ->
 
     let result = db.insert_ip(&ip_geolocation).await;
     match result {
-        Ok(ip_id) => HttpResponse::Ok().body(
-            format!("Ip {} saved with mongo uuid: {}", data.ip, ip_id.to_hex())
-        ),
+        Ok(_) => HttpResponse::Ok().body("ip saved"),
         Err(_) => HttpResponse::InternalServerError().body("Duplicated entry!"),
     }
 }
