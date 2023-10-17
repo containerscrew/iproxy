@@ -8,6 +8,7 @@ use crate::routes::{delete_ip, get_ip, health, insert_ip, update_ip};
 use super::*;
 #[actix_web::test]
 #[ignore = "requires MongoDB instance running"]
+// Pending to add container with test containers
 async fn test() {
     let db_endpoint = std::env::var("DB_ENDPOINT").unwrap_or_else(|_| "mongodb://admin:admin@localhost:27017/?maxPoolSize=20&w=majority".into());
 
