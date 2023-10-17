@@ -10,16 +10,17 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [Badges](#badges)
 - [Introduction](#introduction)
 - [How works](#how-works)
 - [Local development](#local-development)
   - [Requirements](#requirements)
-  - [Clone the repository:](#clone-the-repository)
+  - [Clone the repository](#clone-the-repository)
   - [Set your .env file with the necessary credentials](#set-your-env-file-with-the-necessary-credentials)
   - [Start your local mongodb using a container](#start-your-local-mongodb-using-a-container)
 - [Running in local](#running-in-local)
-  - [Cargo run with autoload:](#cargo-run-with-autoload)
-  - [Cargo in local dev:](#cargo-in-local-dev)
+  - [Cargo run with autoload](#cargo-run-with-autoload)
+  - [Cargo in local dev](#cargo-in-local-dev)
   - [Build](#build)
   - [Running the API](#running-the-api)
   - [Going to production](#going-to-production)
@@ -35,6 +36,10 @@
 - [LICENSE](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+# Badges
+![Test Status](https://github.com/containerscrew/ipfinder/actions/workflows/test.yml/badge.svg)
+[![License](https://img.shields.io/github/license/containerscrew/ipfinder)](/LICENSE)
 
 # Introduction
 So imagine that you want to start indexing public IPv4 geolocation data. There are paid services, others free but requiring registration, that offer this type of content.
@@ -64,16 +69,16 @@ When you start the API, it accepts all 4 CRUD methods of a simple API. Insert, g
 
 Take a look to the [official documentation](https://www.rust-lang.org/tools/install)
 
-## Clone the repository:
+## Clone the repository
 
-```bash
+```shell
 git clone https://github.com/containerscrew/ipfinder.git
 cd ipfinder
 ```
 
 ## Set your .env file with the necessary credentials
 
-```.dotenv
+```dotenv
 DB_ENDPOINT="mongodb://admin:admin@localhost:27017/?maxPoolSize=20&w=majority"
 DB_NAME="ipfinder"
 COLLECTION_NAME="ips"
@@ -99,14 +104,14 @@ docker-compose -f compose.yml up -d
 
 # Running in local
 
-## Cargo run with autoload:
+## Cargo run with autoload
 
 ```shell
 cargo binstall cargo-watch
 cargo watch -x run
 ```
 
-## Cargo in local dev:
+## Cargo in local dev
 
 ```shell
 cargo run --
@@ -187,6 +192,7 @@ Using [mongodb compass](https://www.mongodb.com/products/tools/compass) you can 
 * testing like: https://github.com/actix/examples/blob/master/databases/mongodb/src/test.rs
 * testcontainers for pipeline testing: https://docs.rs/testcontainers/latest/testcontainers/
 * containerize this application to allow launching inside a simple container or pod in k8s (create also a small helm chart)
+* bind address and port should be defined by the user
 
 # Contribution
 
