@@ -31,6 +31,10 @@
   - [Delete IP data](#delete-ip-data)
   - [API alive?](#api-alive)
   - [Visualize](#visualize)
+- [Import from local mongodb to mongodb atlas](#import-from-local-mongodb-to-mongodb-atlas)
+  - [Install mongodb tools](#install-mongodb-tools)
+  - [Dump local database](#dump-local-database)
+  - [Import local database](#import-local-database)
 - [TO DO](#to-do)
 - [Contribution](#contribution)
 - [LICENSE](#license)
@@ -183,6 +187,29 @@ Using [mongodb compass](https://www.mongodb.com/products/tools/compass) you can 
 
 ![data](assets/mongo_data.png)
 
+# Import from local mongodb to mongodb atlas
+
+## Install mongodb tools
+
+```shell
+brew install mongodb/brew/mongodb-database-tools
+```
+
+If you are not using OSX, please visit the official documentation to install `mongodump` and `mongorestore`
+
+## Dump local database
+
+```shell
+mongodump --uri="mongodb://admin:admin@localhost:27017/?maxPoolSize=20&w=majority"
+```
+
+This command will create a new `dump/` directory with the backup
+
+## Import local database
+
+```shell
+mongorestore --uri="mongodb+srv://USERNAME:PASSWORD@XXXXX.XXXX.mongodb.net/?retryWrites=true&w=majority" --db="ipfinder" --collection="ips" dump/ipfinder/ips.bson
+```
 
 # TO DO
 
