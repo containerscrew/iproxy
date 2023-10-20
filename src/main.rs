@@ -51,8 +51,8 @@ pub fn get_env() {
 
 fn start_server(db: Arc<dyn DbOps+Send+Sync>) -> Server {
     HttpServer::new(move || {
-        App::new().service(
-            web::scope("/api/v1/ipfinder")
+        App::new()
+                .service(web::scope("/api/v1/ipfinder")
                 .app_data(web::Data::new(db.clone()))
                 .wrap(Logger::default())
                 .wrap(Logger::new("%a %{User-Agent}i"))
