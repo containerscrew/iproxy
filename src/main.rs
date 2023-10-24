@@ -23,7 +23,7 @@ async fn main() -> std::io::Result<()> {
 
     println!("Ipfinder API started!");
 
-    // Load env variables with mongodb config
+    // Load env variables
     let db_endpoint : String= env::var("DB_ENDPOINT").expect("You must set the DB_ENDPOINT environment var!");
     let db_name: String = env::var("DB_NAME").expect("You must set the DB_NAME environment var!");
     let collection_name: String = env::var("COLLECTION_NAME").expect("You must set the COLLECTION_NAME environment var!");
@@ -63,7 +63,7 @@ fn start_server(db: Arc<dyn DbOps+Send+Sync>) -> Server {
                 .service(delete_ip)
         )
     }).workers(5)
-        .bind(("127.0.0.1", 8081)).expect("Unable to bind address!")
+        .bind(("127.0.0.1", 8080)).expect("Unable to bind address!")
         .shutdown_timeout(30)
         .run()
 }
