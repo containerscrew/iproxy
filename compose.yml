@@ -1,7 +1,21 @@
 services:
+  ipfinder:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ipfinder
+    env_file:
+      - .env
+    networks:
+      - ipfinder
+    ports:
+      - 8080:8080
+    restart: always
   mongodb:
     image: mongo
     container_name: mongo
+    networks:
+      - ipfinder
     restart: always
     ports:
       - 27017:27017
@@ -11,6 +25,37 @@ services:
       - MONGO_INITDB_DATABASE=ipfinder
     volumes:
       - mongodb:/data/db
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    networks:
+      - ipfinder
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - 9090:9090
+    restart: unless-stopped
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prom_data:/prometheus
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    networks:
+      - ipfinder
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=grafana
+    volumes:
+      - ./grafana:/etc/grafana/provisioning/datasources
+
+networks:
+  ipfinder:
+    driver: bridge
 
 volumes:
   mongodb:
+  prom_data:
