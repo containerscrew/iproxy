@@ -1,9 +1,9 @@
 services:
-  ipfinder:
+  iproxy:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: ipfinder
+    container_name: iproxy
     env_file:
       - .env
     networks:
@@ -22,7 +22,7 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=admin
-      - MONGO_INITDB_DATABASE=ipfinder
+      - MONGO_INITDB_DATABASE=iproxy
     volumes:
       - mongodb:/data/db
   prometheus:
@@ -53,7 +53,7 @@ services:
       - ./grafana:/etc/grafana/provisioning/datasources
 
 networks:
-  ipfinder:
+  iproxy:
     driver: bridge
 
 volumes:
