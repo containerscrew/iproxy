@@ -2,10 +2,10 @@ name: Test 🛠️
 
 on:
   push:
-    branches:
-      - "*"
+#    branches:
+#      - "*"
     tags:
-      - '*'
+      - 'v*'
 env:
   CARGO_TERM_COLOR: always
 

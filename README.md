@@ -1,7 +1,7 @@
 <p align="center" >
     <img src="assets/rust-logo.svg" alt="logo" width="250"/>
 <h3 align="center">ipfinder</h3>
-<p align="center">Build your own IPV4 geolocation database</p>
+<p align="center">Built your own IPV4 geolocation database</p>
 <p align="center">Build with ❤ in Rust</p>
 <p align="center">Don't judge my code, I've only been programming in RUST for 3 weeks without being a developer :)</p>
 </p>
@@ -220,6 +220,11 @@ mongorestore --uri="mongodb+srv://USERNAME:PASSWORD@XXXXX.XXXX.mongodb.net/?retr
 * testcontainers for pipeline testing: https://docs.rs/testcontainers/latest/testcontainers/
 * containerize this application to allow launching inside a simple container or pod in k8s (create also a small helm chart)
 * bind address and port should be defined by the user
+
+# Axum
+
+* [Github](https://github.com/tokio-rs/axum)
+* [API example](https://github.com/wpcodevo/simple-api-rust-axum)
 
 # Contribution
 
