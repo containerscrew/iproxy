@@ -1,5 +1,6 @@
 use serde::Deserialize;
 use std::fs;
+use mongodb::Database;
 
 #[derive(Deserialize)]
 pub struct ServerConfig {
@@ -13,9 +14,18 @@ pub struct LoggingConfig {
 }
 
 #[derive(Deserialize)]
+pub struct DatabaseConfig {
+    pub(crate) endpoint: String,
+    pub(crate) db_name: String,
+    pub(crate) collection_name: String,
+}
+
+
+#[derive(Deserialize)]
 pub struct Config {
     pub(crate) server: ServerConfig,
     pub(crate) logging: LoggingConfig,
+    pub(crate) database: DatabaseConfig,
 }
 
 impl Config {

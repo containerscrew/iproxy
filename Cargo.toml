@@ -16,4 +16,7 @@ tokio = { version = "1.39.2", features = ["rt", "rt-multi-thread", "macros"] }
 reqwest = { version = "0.12.5", features = ["json"] }
 async-trait = "0.1.81"
 toml = "0.8.19"
+mongodb = "3.0.1"
+bson = "2.11.0"
+thiserror = "1.0.63"
 
