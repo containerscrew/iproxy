@@ -225,6 +225,7 @@ mongorestore --uri="mongodb+srv://USERNAME:PASSWORD@XXXXX.XXXX.mongodb.net/?retr
 
 * [Github](https://github.com/tokio-rs/axum)
 * [API example](https://github.com/wpcodevo/simple-api-rust-axum)
+* [API example mongodb](https://github.com/wpcodevo/rust-axum-mongodb)
 
 # Contribution
 
