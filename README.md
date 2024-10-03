@@ -100,7 +100,7 @@ curl http://127.0.0.1:8000/api/v1/health
 make compose-down
 ```
 
-## Visualize data
+# Visualize data
 
 Using [mongodb compass](https://www.mongodb.com/products/tools/compass) you can visualize your data from the collection `ips`
 
@@ -108,13 +108,12 @@ Using [mongodb compass](https://www.mongodb.com/products/tools/compass) you can 
 
 # Import from local mongodb to mongodb atlas
 
+Import data from localhost to mongodb atlas
+
 ## Install mongodb tools
 
-```shell
-brew install mongodb/brew/mongodb-database-tools
-```
+Visit the official webpage https://www.mongodb.com/docs/database-tools/installation/installation/.
 
-If you are not using OSX, please visit the official documentation to install `mongodump` and `mongorestore`
 
 ## Dump local database
 
@@ -124,10 +123,12 @@ mongodump --uri="mongodb://admin:admin@localhost:27017/?maxPoolSize=20&w=majorit
 
 This command will create a new `dump/` directory with the backup
 
-## Import local database
+## Import local database to mongodb atlas
+
+> The uri of this command is the remote uri (mongodb atlas)
 
 ```shell
-mongorestore --uri="mongodb+srv://USERNAME:PASSWORD@XXXXX.XXXX.mongodb.net/?retryWrites=true&w=majority" --db="ipfinder" --collection="ips" dump/ipfinder/ips.bson
+mongorestore --uri="mongodb+srv://USERNAME:PASSWORD@XXXXX.XXXX.mongodb.net/?retryWrites=true&w=majority" --db="ipfinder" --collection="ips" dump/iproxy/ips.bson
 ```
 
 # TO DO
