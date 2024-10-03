@@ -1,5 +1,5 @@
 <p align="center" >
-    <img src="assets/rust-logo.svg" alt="logo" width="250"/>
+    <img src="img/world-map.svg" alt="logo" width="250"/>
 <h3 align="center">ipfinder</h3>
 <p align="center">Built your own IPV4 geolocation database</p>
 <p align="center">Built with ❤ in Rust</p>
@@ -104,7 +104,7 @@ make compose-down
 
 Using [mongodb compass](https://www.mongodb.com/products/tools/compass) you can visualize your data from the collection `ips`
 
-![data](assets/mongo_data.png)
+![data](img/mongo_data.png)
 
 # Import from local mongodb to mongodb atlas
 
@@ -143,4 +143,4 @@ mongorestore --uri="mongodb+srv://USERNAME:PASSWORD@XXXXX.XXXX.mongodb.net/?retr
 
 # LICENSE
 
-[LICENSE](./LICENSE)
+`iproxy` is distributed under the terms of the [`GNU AFFERO GENERAL PUBLIC LICENSE`](./LICENSE).
