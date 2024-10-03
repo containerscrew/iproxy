@@ -6,13 +6,12 @@ use async_trait::async_trait;
 use bson::{doc};
 use mongodb::options::{ClientOptions, IndexOptions, ServerApi, ServerApiVersion};
 use tracing::{error, info};
-use crate::error::MyError;
 use crate::models::{GeoLocation};
 
 #[async_trait]
 pub trait DbOps {
     async fn insert_ip(&self, geolocation: &GeoLocation) -> Result<ObjectId, Error>;
-    // async fn get_ip(&self, ip: String) ->  Result<Option<GeoLocation>, Error>;
+    async fn get_ip(&self, ip: String) ->  Result<Option<GeoLocation>, Error>;
     // async fn delete_ip(&self, ip: String) -> Result<DeleteResult, Error>;
     // async fn update_ip(&self, ip: String, geolocation: &GeoLocation) -> Result<UpdateResult, Error>;
 }
@@ -77,10 +76,10 @@ impl DbOps for Db {
             let result = self.collection.insert_one(geolocation).await?;
             Ok(result.inserted_id.as_object_id().unwrap())
         }
-//     // async fn get_ip(&self, ip: String) -> Result<Option<GeoLocation>, Error> {
-//     //     let get_geolocation = self.collection.find_one(doc! { "query": &ip }, None).await?;
-//     //     Ok(get_geolocation)
-//     // }
+        async fn get_ip(&self, ip: String) -> Result<Option<GeoLocation>, Error> {
+            let get_geolocation = self.collection.find_one(doc! { "query": &ip }).await?;
+            Ok(get_geolocation)
+        }
 //     // async fn delete_ip(&self, ip: String) -> Result<DeleteResult, Error> {
 //     //     let delete_result = self.collection.delete_one(doc! { "query": &ip }, None).await?;
 //     //     Ok(delete_result)

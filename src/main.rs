@@ -1,27 +1,28 @@
-use std::sync::Arc;
-use tracing::info;
 use crate::config::Config;
-use crate::error::MyError;
+use crate::db::Db;
+// use crate::error::MyError;
 use crate::handlers::handler_404;
 use crate::logger::setup_logger;
-use crate::db::Db;
 use crate::router::create_router;
+use std::sync::Arc;
+use tracing::info;
 
-mod logger;
-mod router;
-mod handlers;
-mod models;
-mod external;
-mod db;
 mod config;
+mod db;
 mod error;
+mod external;
+mod handlers;
+mod logger;
+mod models;
+mod router;
+mod utils;
 
 pub struct AppState {
     db: Db,
 }
 
 #[tokio::main]
-async fn main() -> Result<(), MyError> {
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Load configuration file
     let config = Config::from_file("config.toml");
 
@@ -30,7 +31,12 @@ async fn main() -> Result<(), MyError> {
     info!("Hello iproxy");
 
     // Init database
-    let db = Db::init(config.database.endpoint, config.database.db_name, config.database.collection_name).await?;
+    let db = Db::init(
+        config.database.endpoint,
+        config.database.db_name,
+        config.database.collection_name,
+    )
+    .await?;
 
     // TODO: control CORS
 

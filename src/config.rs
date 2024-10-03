@@ -1,6 +1,5 @@
 use serde::Deserialize;
 use std::fs;
-use mongodb::Database;
 
 #[derive(Deserialize)]
 pub struct ServerConfig {
@@ -20,7 +19,6 @@ pub struct DatabaseConfig {
     pub(crate) collection_name: String,
 }
 
-
 #[derive(Deserialize)]
 pub struct Config {
     pub(crate) server: ServerConfig,
@@ -30,9 +28,7 @@ pub struct Config {
 
 impl Config {
     pub(crate) fn from_file(path: &str) -> Self {
-        let config_content = fs::read_to_string(path)
-            .expect("Failed to read configuration file");
-        toml::from_str(&config_content)
-            .expect("Failed to parse configuration file")
+        let config_content = fs::read_to_string(path).expect("Failed to read configuration file");
+        toml::from_str(&config_content).expect("Failed to parse configuration file")
     }
 }
