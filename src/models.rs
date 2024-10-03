@@ -1,11 +1,5 @@
 use serde::{Deserialize, Serialize};
 
-// pub type DB = Arc<Mutex<Vec<Ip>>>;
-//
-// pub fn todo_db() -> DB {
-//     Arc::new(Mutex::new(Vec::new()))
-// }
-
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct GeoLocation {
     status: String,

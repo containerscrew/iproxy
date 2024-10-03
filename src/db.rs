@@ -1,17 +1,17 @@
-use std::time::Duration;
-use bson::oid::ObjectId;
-use mongodb::{Client, Collection, Database, IndexModel};
-use mongodb::error::Error;
+use crate::models::GeoLocation;
 use async_trait::async_trait;
-use bson::{doc};
+use bson::doc;
+use bson::oid::ObjectId;
+use mongodb::error::Error;
 use mongodb::options::{ClientOptions, IndexOptions, ServerApi, ServerApiVersion};
+use mongodb::{Client, Collection, Database, IndexModel};
+use std::time::Duration;
 use tracing::{error, info};
-use crate::models::{GeoLocation};
 
 #[async_trait]
 pub trait DbOps {
     async fn insert_ip(&self, geolocation: &GeoLocation) -> Result<ObjectId, Error>;
-    async fn get_ip(&self, ip: String) ->  Result<Option<GeoLocation>, Error>;
+    async fn get_ip(&self, ip: String) -> Result<Option<GeoLocation>, Error>;
     // async fn delete_ip(&self, ip: String) -> Result<DeleteResult, Error>;
     // async fn update_ip(&self, ip: String, geolocation: &GeoLocation) -> Result<UpdateResult, Error>;
 }
@@ -28,8 +28,11 @@ pub struct Db {
 
 // Initiate the constructor for Db struct
 impl Db {
-    pub async fn init(connection_url: String, database: String, collection: String) -> Result<Self, mongodb::error::Error>  {
-
+    pub async fn init(
+        connection_url: String,
+        database: String,
+        collection: String,
+    ) -> Result<Self, mongodb::error::Error> {
         let mut client_options = ClientOptions::parse(connection_url).await?;
         client_options.server_selection_timeout = Some(Duration::from_secs(3));
         client_options.app_name = Some(database.to_string());
@@ -51,7 +54,11 @@ impl Db {
 
         let collection = database.collection(&collection);
 
-        Ok(Db { client, database, collection })
+        Ok(Db {
+            client,
+            database,
+            collection,
+        })
     }
 
     // Creates an index on the "ip" field to force the values to be unique.
@@ -72,22 +79,22 @@ impl Db {
 
 #[async_trait]
 impl DbOps for Db {
-        async fn insert_ip(&self, geolocation: &GeoLocation) -> Result<ObjectId, Error> {
-            let result = self.collection.insert_one(geolocation).await?;
-            Ok(result.inserted_id.as_object_id().unwrap())
-        }
-        async fn get_ip(&self, ip: String) -> Result<Option<GeoLocation>, Error> {
-            let get_geolocation = self.collection.find_one(doc! { "query": &ip }).await?;
-            Ok(get_geolocation)
-        }
-//     // async fn delete_ip(&self, ip: String) -> Result<DeleteResult, Error> {
-//     //     let delete_result = self.collection.delete_one(doc! { "query": &ip }, None).await?;
-//     //     Ok(delete_result)
-//     // }
-//     // async fn update_ip(&self, ip: String, geolocation: &GeoLocation) -> Result<UpdateResult, Error> {
-//     //     let geolocation_bson = to_document(geolocation)?;
-//     //
-//     //     let update_result = self.collection.update_one(doc! {"query": &ip}, geolocation_bson, None).await?;
-//     //     Ok(update_result)
-//     // }
+    async fn insert_ip(&self, geolocation: &GeoLocation) -> Result<ObjectId, Error> {
+        let result = self.collection.insert_one(geolocation).await?;
+        Ok(result.inserted_id.as_object_id().unwrap())
+    }
+    async fn get_ip(&self, ip: String) -> Result<Option<GeoLocation>, Error> {
+        let get_geolocation = self.collection.find_one(doc! { "query": &ip }).await?;
+        Ok(get_geolocation)
+    }
+    //     // async fn delete_ip(&self, ip: String) -> Result<DeleteResult, Error> {
+    //     //     let delete_result = self.collection.delete_one(doc! { "query": &ip }, None).await?;
+    //     //     Ok(delete_result)
+    //     // }
+    //     // async fn update_ip(&self, ip: String, geolocation: &GeoLocation) -> Result<UpdateResult, Error> {
+    //     //     let geolocation_bson = to_document(geolocation)?;
+    //     //
+    //     //     let update_result = self.collection.update_one(doc! {"query": &ip}, geolocation_bson, None).await?;
+    //     //     Ok(update_result)
+    //     // }
 }
