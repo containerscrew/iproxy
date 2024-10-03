@@ -14,6 +14,23 @@ pub async fn health_checker_handler() -> impl IntoResponse {
 }
 
 pub async fn get_ip(Path(ip): Path<String>, State(app_state): State<Arc<AppState>>) -> impl IntoResponse {
+    // Get ip data from mongodb if exists
+    match app_state.db.get_ip(ip.clone()).await {
+        Ok(Some(ip_geolocation)) => {
+            // Si la IP ya está en la base de datos, devuélvela
+            info!("Ip {} already registered", &ip);
+            return (StatusCode::OK, Json(ip_geolocation));
+        }
+        Ok(None) => {
+            // Si no hay datos para la IP
+            info!("Ip {} not found in database", &ip);
+        }
+        Err(e) => {
+            // Si ocurre un error al obtener la IP
+            warn!("Error getting ip data: {}", e);
+        }
+    }
+
     // Get ip data from external service.
     let ip_geolocation = get_geolocation(&ip).await.expect("");
 

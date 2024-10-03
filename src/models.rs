@@ -1,6 +1,5 @@
 use serde::{Deserialize, Serialize};
 
-
 // pub type DB = Arc<Mutex<Vec<Ip>>>;
 //
 // pub fn todo_db() -> DB {

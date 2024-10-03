@@ -6,6 +6,6 @@ port = 8000
 log_level = "info"
 
 [database]
-endpoint = "mongodb://admin:admin@localhost:27017/?maxPoolSize=20&w=majority"
+endpoint = "mongodb://admin:admin@mongodb:27017/?maxPoolSize=20&w=majority"
 db_name = "iproxy"
 collection_name = "ips"

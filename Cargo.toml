@@ -2,7 +2,11 @@
 name = "iproxy"
 version = "0.1.0"
 edition = "2021"
-#rust-version = "1.80.1"
+authors = ["containerscrew info@containerscrew.com"]
+repository = "https://github.com/containerscrew/iproxy"
+rust-version = "1.80.1"
+license-file = "LICENSE"
+description = "Proxy server for IP geolocation. Use external services to get the geolocation of an IP address."
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -19,4 +23,3 @@ toml = "0.8.19"
 mongodb = "3.0.1"
 bson = "2.11.0"
 thiserror = "1.0.63"
-

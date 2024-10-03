@@ -10,10 +10,12 @@ repos:
       -  id: end-of-file-fixer
       -  id: mixed-line-ending
       -  id: trailing-whitespace
-  - repo: https://github.com/thlorenz/doctoc
-    rev: v2.2.0
+      -  id: check-toml
+  - repo: https://github.com/containerscrew/mtoc
+    rev: v0.3.2
     hooks:
-      - id: doctoc
+      - id: mtoc
+        args: [ "-e", ".target/" ]
   - repo: https://github.com/gitleaks/gitleaks
     rev: v8.18.0
     hooks:
@@ -25,6 +27,8 @@ repos:
   - repo: https://github.com/doublify/pre-commit-rust
     rev: v1.0
     hooks:
-      # - id: fmt
-      #   args: ['--verbose', '--']
+      - id: fmt
+        args: ['--verbose', '--']
       - id: cargo-check
+      - id: clippy
+        args: ["--", "-D", "warnings"]

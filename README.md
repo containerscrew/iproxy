@@ -6,17 +6,15 @@
 <p align="center">Don't judge my code, I've only been programming in RUST for 3 weeks without being a developer :)</p>
 </p>
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
-
+<!-- START OF TOC !DO NOT EDIT THIS CONTENT MANUALLY-->
+**Table of Contents**  *generated with [mtoc](https://github.com/containerscrew/mtoc)*
 - [Badges](#badges)
 - [Introduction](#introduction)
 - [How works](#how-works)
 - [Local development](#local-development)
   - [Requirements](#requirements)
   - [Clone the repository](#clone-the-repository)
-  - [Set your .env file with the necessary credentials](#set-your-env-file-with-the-necessary-credentials)
+  - [Set your .env file with the necessary credentials](#set-your-.env-file-with-the-necessary-credentials)
   - [Start your local mongodb using a container](#start-your-local-mongodb-using-a-container)
 - [Running in local](#running-in-local)
   - [Cargo run with autoload](#cargo-run-with-autoload)
@@ -29,17 +27,17 @@
   - [Getting IP info](#getting-ip-info)
   - [Updating IP info](#updating-ip-info)
   - [Delete IP data](#delete-ip-data)
-  - [API alive?](#api-alive)
+  - [API alive?](#api-alive?)
   - [Visualize](#visualize)
 - [Import from local mongodb to mongodb atlas](#import-from-local-mongodb-to-mongodb-atlas)
   - [Install mongodb tools](#install-mongodb-tools)
   - [Dump local database](#dump-local-database)
   - [Import local database](#import-local-database)
 - [TO DO](#to-do)
+- [Axum](#axum)
 - [Contribution](#contribution)
 - [LICENSE](#license)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+<!-- END OF TOC -->
 
 # Badges
 ![Test Status](https://github.com/containerscrew/ipfinder/actions/workflows/test.yml/badge.svg)
