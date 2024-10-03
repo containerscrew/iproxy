@@ -94,6 +94,12 @@ curl http://127.0.0.1:8000/api/v1/1.1.1.1
 curl http://127.0.0.1:8000/api/v1/health
 ```
 
+## Stop the stack
+
+```bash
+make compose-down
+```
+
 ## Visualize data
 
 Using [mongodb compass](https://www.mongodb.com/products/tools/compass) you can visualize your data from the collection `ips`
