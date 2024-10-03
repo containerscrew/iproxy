@@ -49,6 +49,12 @@ Other possible solutions (not implemented):
 
 You will make a request to your API endpoint, for example, `curl http://127.0.0.1/api/v1/1.1.1.1`, and the API will first check if the data exists in the database. If it does not exist, it will retrieve the information from the external website mentioned above. The next time you query the same IP, the data will be retrieved from MongoDB, avoiding the external query.
 
+# Example
+
+![example](./img/example.png)
+
+> API logs can be retrieved executing `docker logs -f iproxy` once the API is running. Plase visit the next step.
+
 # Using the API
 
 The setup is configured to work with docker-compose locally.
