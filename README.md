@@ -2,8 +2,7 @@
     <img src="assets/rust-logo.svg" alt="logo" width="250"/>
 <h3 align="center">ipfinder</h3>
 <p align="center">Built your own IPV4 geolocation database</p>
-<p align="center">Build with ❤ in Rust</p>
-<p align="center">Don't judge my code, I've only been programming in RUST for 3 weeks without being a developer :)</p>
+<p align="center">Built with ❤ in Rust</p>
 </p>
 
 <!-- START OF TOC !DO NOT EDIT THIS CONTENT MANUALLY-->
@@ -11,175 +10,91 @@
 - [Badges](#badges)
 - [Introduction](#introduction)
 - [How works](#how-works)
-- [Local development](#local-development)
-  - [Requirements](#requirements)
-  - [Clone the repository](#clone-the-repository)
-  - [Set your .env file with the necessary credentials](#set-your-.env-file-with-the-necessary-credentials)
-  - [Start your local mongodb using a container](#start-your-local-mongodb-using-a-container)
-- [Running in local](#running-in-local)
-  - [Cargo run with autoload](#cargo-run-with-autoload)
-  - [Cargo in local dev](#cargo-in-local-dev)
-  - [Build](#build)
-  - [Running the API](#running-the-api)
-  - [Going to production](#going-to-production)
-- [Examples](#examples)
-  - [Inserting IP](#inserting-ip)
-  - [Getting IP info](#getting-ip-info)
-  - [Updating IP info](#updating-ip-info)
-  - [Delete IP data](#delete-ip-data)
-  - [API alive?](#api-alive?)
-  - [Visualize](#visualize)
+- [Using the API](#using-the-api)
+  - [Config.toml](#config.toml)
+  - [Launch the `docker-compose`](#launch-the-`docker-compose`)
+  - [Run your first query](#run-your-first-query)
+  - [Api alive?](#api-alive?)
+  - [Visualize data](#visualize-data)
 - [Import from local mongodb to mongodb atlas](#import-from-local-mongodb-to-mongodb-atlas)
   - [Install mongodb tools](#install-mongodb-tools)
   - [Dump local database](#dump-local-database)
   - [Import local database](#import-local-database)
 - [TO DO](#to-do)
-- [Axum](#axum)
-- [Contribution](#contribution)
+- [Useful Links](#useful-links)
 - [LICENSE](#license)
 <!-- END OF TOC -->
 
 # Badges
-![Test Status](https://github.com/containerscrew/ipfinder/actions/workflows/test.yml/badge.svg)
-[![License](https://img.shields.io/github/license/containerscrew/ipfinder)](/LICENSE)
+![Rust](https://img.shields.io/badge/rust-%23000000.svg?style=for-the-badge&logo=rust&logoColor=white)
+[![License](https://img.shields.io/github/license/containerscrew/iproxy)](/LICENSE)
+![Code Size](https://img.shields.io/github/languages/code-size/containerscrew/mtoc)
 
 # Introduction
+
 So imagine that you want to start indexing public IPv4 geolocation data. There are paid services, others free but requiring registration, that offer this type of content.
 By consulting one of these services you will obtain the data you need.
 
 I do not know exactly all the public services that offer this data, in my case I have used the public database of **[ip-api.com](http://ip-api.com)**
 
-> Without this service this tool does not work, it would be necessary to refactor and use another API.
+> Without this external service this tool does not work, it would be necessary to refactor and use another API and map the responses.
 
 Other possible solutions (not implemented):
 * https://www.maxmind.com/en/home
 * https://ipstack.com/
+* https://ip.guide
 
 
 # How works
 
-When you start the API, it accepts all 4 CRUD methods of a simple API. Insert, get, delete and update. All data is stored in mongodb (the only database implemented to date). We will see more examples of the commands in this README.
+You will make a request to your API endpoint, for example, `curl http://127.0.0.1/api/v1/1.1.1.1`, and the API will first check if the data exists in the database. If it does not exist, it will retrieve the information from the external website mentioned above. The next time you query the same IP, the data will be retrieved from MongoDB, avoiding the external query.
 
+# Using the API
 
-# Local development
+The setup is configured to work with docker-compose locally.
 
-## Requirements
+## Config.toml
 
-* Rust
-* Cargo
-* MongoDB
+With [this file](./config.toml) located in the root of this repository, you will be able to change some parameters.
 
-Take a look to the [official documentation](https://www.rust-lang.org/tools/install)
+## Launch the `docker-compose`
 
-## Clone the repository
+| :warning: WARNING           |
+|:----------------------------|
+| Before start the docker-compose, change the directory where you want to save the mongodb data     |
 
-```shell
-git clone https://github.com/containerscrew/ipfinder.git
-cd ipfinder
+Example, from [compose.yml](./compose.yml):
+
+```yaml
+  mongodb:
+    ....other config
+    volumes:
+      - ~/Documents/DockerData/mongoIproxy:/data/db # this line!!
 ```
 
-## Set your .env file with the necessary credentials
-
-```dotenv
-DB_ENDPOINT="mongodb://admin:admin@localhost:27017/?maxPoolSize=20&w=majority"
-DB_NAME="ipfinder"
-COLLECTION_NAME="ips"
-RUST_LOG="actix_web=debug"
-```
-
-If you are using mongodb atlas, just set the endpoint that you get from the mongodb atlas console:
-
-```dotenv
-DB_ENDPOINT="mongodb+srv://XXXX:XXXXX@XXXX.XXXXX.mongodb.net/?retryWrites=true&w=majority"
-DB_NAME="ipfinder"
-COLLECTION_NAME="ips"
-RUST_LOG="actix_web=debug"
-```
-
-If not, run the container locally
-
-## Start your local mongodb using a container
+Now, launch all the stack:
 
 ```bash
-docker-compose -f compose.yml up -d
+make compose-up-build
 ```
 
-# Running in local
+This will starts the `iproxy` container and `mongodb`.
 
-## Cargo run with autoload
-
-```shell
-cargo binstall cargo-watch
-cargo watch -x run
-```
-
-## Cargo in local dev
-
-```shell
-cargo run --
-```
-
-## Build
-```shell
-cargo build --release # --release flag for production environment, without --release flag for testing
-```
-
-## Running the API
-
-If the previous build was success, then:
-
-```shell
-./target/release/ipfinder
-```
-
-> Remember to have the database created locally or in mongo atlas, otherwise the API will panic
-
-## Going to production
-
-* containerfile
-* k8s....
-
-TO DO...
-
-[See to do section](#to-do)
-
-# Examples
-
-## Inserting IP
+## Run your first query
 
 ```bash
-curl -XPOST http://127.0.0.1:8081/api/v1/ipfinder/insert -d '{"ip":"8.8.8.8"}' -H "Content-Type: application/json"
+curl http://127.0.0.1:8000/api/v1/1.1.1.1
 ```
 
-## Getting IP info
+> http://ip:port/api/v1/ip-to-query
+
+## Api alive?
 
 ```bash
-curl -XGET http://127.0.0.1:8081/api/v1/ipfinder/get/8.8.8.8
+curl http://127.0.0.1:8000/api/v1/health
 ```
 
-## Updating IP info
-
-> THIS METHOD IS ACTUALLY FAILING, NEED TO BE FIXED
-
-```bash
-curl -XPUT http://127.0.0.1:8081/api/v1/ipfinder/update/8.8.8.8
-```
-
-> **The update method is not a CRUD update as such. By relying on data from an external API, launching the update command basically re-queries the data from the external *ip-api* database and refreshes it again.**
-
-## Delete IP data
-
-```bash
-curl -XDELETE http://127.0.0.1:8081/api/v1/ipfinder/delete/8.8.8.8
-```
-
-## API alive?
-
-```shell
-curl -XGET http://127.0.0.1:8081/api/v1/ipfinder/health
-```
-
-## Visualize
+## Visualize data
 
 Using [mongodb compass](https://www.mongodb.com/products/tools/compass) you can visualize your data from the collection `ips`
 
@@ -211,23 +126,13 @@ mongorestore --uri="mongodb+srv://USERNAME:PASSWORD@XXXXX.XXXX.mongodb.net/?retr
 
 # TO DO
 
-* improve error handling and logging with env_logger (custom error handling)
-* implement update function in CRUD
-* middleware with API authentication?
-* testing like: https://github.com/actix/examples/blob/master/databases/mongodb/src/test.rs
-* testcontainers for pipeline testing: https://docs.rs/testcontainers/latest/testcontainers/
-* containerize this application to allow launching inside a simple container or pod in k8s (create also a small helm chart)
-* bind address and port should be defined by the user
+* Testing and error handling with custom errors ([MyErrors](./src/error.rs))
 
-# Axum
+# Useful Links
 
 * [Github](https://github.com/tokio-rs/axum)
 * [API example](https://github.com/wpcodevo/simple-api-rust-axum)
 * [API example mongodb](https://github.com/wpcodevo/rust-axum-mongodb)
-
-# Contribution
-
-Pull requests are welcome! Any code refactoring, improvement, implementation. I just want to learn Rust! I'm a rookie
 
 # LICENSE
 

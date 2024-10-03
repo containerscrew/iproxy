@@ -7,14 +7,16 @@ services:
     container_name: iproxy
     networks:
       - iproxy-mongodb
+    ports:
+      - 8000:8000
   mongodb:
     image: docker.io/mongo:latest # TODO: do not use latest, use a specific version
     container_name: mongo
     networks:
       - iproxy-mongodb
     restart: unless-stopped
-    # ports:
-    #   - 27017:27017
+    ports:
+      - 27017:27017
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=admin

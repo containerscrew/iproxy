@@ -6,7 +6,7 @@ const USER_AGENT: &str = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/
 
 pub async fn get_geolocation(info: &String) -> Result<GeoLocation, Error> {
     let client = reqwest::Client::new()
-        .get(format!("{}{}", IP_API_ENDPOINT, info.to_string()))
+        .get(format!("{}{}", IP_API_ENDPOINT, info))
         .header("User-Agent", USER_AGENT);
 
     let response = client.send().await?;

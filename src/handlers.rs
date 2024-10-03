@@ -1,19 +1,22 @@
-use std::sync::Arc;
+use crate::db::DbOps;
+use crate::external::get_geolocation;
+use crate::AppState;
 use axum::extract::{Path, State};
 use axum::http::StatusCode;
-use axum::Json;
 use axum::response::IntoResponse;
+use axum::Json;
+use std::sync::Arc;
 use tracing::{info, warn};
-use crate::AppState;
-use crate::external::get_geolocation;
-use crate::db::DbOps;
 
 pub async fn health_checker_handler() -> impl IntoResponse {
     // Healthcheck response
     (StatusCode::OK, "Alive")
 }
 
-pub async fn get_ip(Path(ip): Path<String>, State(app_state): State<Arc<AppState>>) -> impl IntoResponse {
+pub async fn get_ip(
+    Path(ip): Path<String>,
+    State(app_state): State<Arc<AppState>>,
+) -> impl IntoResponse {
     // Get ip data from mongodb if exists
     match app_state.db.get_ip(ip.clone()).await {
         Ok(Some(ip_geolocation)) => {
