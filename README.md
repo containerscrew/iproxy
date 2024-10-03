@@ -141,6 +141,10 @@ mongorestore --uri="mongodb+srv://USERNAME:PASSWORD@XXXXX.XXXX.mongodb.net/?retr
 
 * Testing and error handling with custom errors ([MyErrors](./src/error.rs))
 
+# Pending to fix
+
+* When the ip is private, the process crashes.
+
 # Useful Links
 
 * [Github](https://github.com/tokio-rs/axum)
