@@ -18,6 +18,9 @@ mtoc: ## Create table of contents with mtoc
 pre-commit: ## Run pre-commit
 	pre-commit run -a
 
+run: ## Run the code locally with cargo
+	cargo run
+
 package: ## Package binary with zip
 	zip -j ${BINARY_NAME}-$(ARCH).zip target/$(TARGET)/release/${BINARY_NAME}
 
