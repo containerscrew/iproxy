@@ -7,7 +7,7 @@ use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use axum::Json;
 use std::sync::Arc;
-use tracing::{info, warn};
+use tracing::{info, trace, warn};
 
 pub async fn health_checker_handler() -> impl IntoResponse {
     // Healthcheck response
@@ -50,7 +50,7 @@ pub async fn get_ip(
             // Serialize the geolocation data to validate its structure
             match serialize_geolocation_data(&ip_geolocation.to_string()) {
                 Ok(data) => {
-                    info!("Geolocation data serialized successfully");
+                    trace!("Geolocation data serialized successfully");
 
                     // Try to insert the geolocation data into the database
                     match app_state.db.insert_ip(&data).await {

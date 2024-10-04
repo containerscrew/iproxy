@@ -11,6 +11,7 @@ pub fn setup_logger(log_level: String) {
     };
 
     tracing_subscriber::fmt()
+        // .json()
         .with_thread_names(true)
         .with_max_level(log_level)
         .with_span_events(FmtSpan::FULL)
