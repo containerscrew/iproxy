@@ -7,6 +7,6 @@ log_level = "info"
 
 [database]
 # If you are running iproxy in localhost, change the address from mongodb:27017 to localhost:27017
-endpoint = "mongodb://admin:admin@mongodb:27017/?maxPoolSize=20&w=majority"
+endpoint = "mongodb://admin:admin@127.0.0.1:27017/?maxPoolSize=20&w=majority"
 db_name = "iproxy"
 collection_name = "ips"

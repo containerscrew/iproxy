@@ -1,7 +1,7 @@
 use crate::models::GeoLocation;
+use serde_json::Error;
 
-pub fn serialize_geolocation_data(response: &str) -> GeoLocation {
-    let location: GeoLocation =
-        serde_json::from_str(response).expect("Can't serialize geolocation data");
-    location
+pub fn serialize_geolocation_data(response: &str) -> Result<GeoLocation, Error> {
+    let location: GeoLocation = serde_json::from_str(response)?;
+    Ok(location)
 }

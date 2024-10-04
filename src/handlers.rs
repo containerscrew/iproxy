@@ -1,5 +1,6 @@
 use crate::db::DbOps;
 use crate::external::get_geolocation;
+use crate::utils::serialize_geolocation_data;
 use crate::AppState;
 use axum::extract::{Path, State};
 use axum::http::StatusCode;
@@ -13,38 +14,74 @@ pub async fn health_checker_handler() -> impl IntoResponse {
     (StatusCode::OK, "Alive")
 }
 
+// Big function, needs to be split into smaller functions
 pub async fn get_ip(
     Path(ip): Path<String>,
     State(app_state): State<Arc<AppState>>,
-) -> impl IntoResponse {
-    // Get ip data from mongodb if exists
+) -> Result<impl IntoResponse, (StatusCode, Json<serde_json::Value>)> {
+    // Try to get IP data from the database
     match app_state.db.get_ip(ip.clone()).await {
         Ok(Some(ip_geolocation)) => {
-            // Si la IP ya está en la base de datos, devuélvela
+            // If IP data exists, return it as JSON
             info!("Ip {} already registered", &ip);
-            return (StatusCode::OK, Json(ip_geolocation));
+            return Ok((
+                StatusCode::OK,
+                Json(serde_json::to_value(ip_geolocation).unwrap()),
+            ));
         }
         Ok(None) => {
-            // Si no hay datos para la IP
             info!("Ip {} not found in database", &ip);
         }
         Err(e) => {
-            // Si ocurre un error al obtener la IP
             warn!("Error getting ip data: {}", e);
+            let db_error = serde_json::json!({
+                "error": "Failed to retrieve IP from the database",
+                "details": e.to_string()
+            });
+            return Err((StatusCode::INTERNAL_SERVER_ERROR, Json(db_error)));
         }
     }
 
-    // Get ip data from external service.
-    let ip_geolocation = get_geolocation(&ip).await.expect("");
+    // If IP data does not exist in the database, get it from the external service
+    match get_geolocation(&ip).await {
+        Ok(ip_geolocation) => {
+            info!("Retriveing geolocation data for {}", &ip);
 
-    // TODO: save data into mongodb
-    match app_state.db.insert_ip(&ip_geolocation).await {
-        Ok(_) => info!("Ip {} registered", ip),
-        Err(e) => warn!("Error inserting ip data, already exist: {}", e),
+            // Serialize the geolocation data to validate its structure
+            match serialize_geolocation_data(&ip_geolocation.to_string()) {
+                Ok(data) => {
+                    info!("Geolocation data serialized successfully");
+
+                    // Try to insert the geolocation data into the database
+                    match app_state.db.insert_ip(&data).await {
+                        Ok(_) => info!("Ip {} registered in database", ip),
+                        Err(e) => warn!("Error inserting IP data into database: {}", e),
+                    }
+
+                    // Return the original JSON from the external service
+                    Ok((StatusCode::OK, ip_geolocation))
+                }
+                Err(e) => {
+                    warn!(
+                        "Error serializing geolocation data: {}. External api response {}",
+                        e,
+                        ip_geolocation.to_string()
+                    );
+                    // Return the original JSON from the external API if serialization fails
+                    Ok((StatusCode::NOT_FOUND, ip_geolocation))
+                }
+            }
+        }
+        Err(e) => {
+            // Handle errors when calling the external geolocation service
+            warn!("Error retrieving geolocation data: {}", e);
+            let geolocation_error = serde_json::json!({
+                "error": "Failed to retrieve geolocation data",
+                "details": e.to_string()
+            });
+            Err((StatusCode::INTERNAL_SERVER_ERROR, Json(geolocation_error)))
+        }
     }
-
-    // Return status code and ip data
-    (StatusCode::OK, Json(ip_geolocation))
 }
 
 pub async fn handler_404() -> impl IntoResponse {
