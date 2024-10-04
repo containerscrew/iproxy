@@ -1,6 +1,6 @@
 <p align="center" >
     <img src="img/world-map.svg" alt="logo" width="250"/>
-<h3 align="center">ipfinder</h3>
+<h3 align="center">iproxy</h3>
 <p align="center">Built your own IPV4 geolocation database</p>
 <p align="center">Built with ❤ in Rust</p>
 </p>
