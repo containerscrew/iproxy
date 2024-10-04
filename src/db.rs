@@ -65,7 +65,7 @@ impl Db {
     pub async fn create_ips_index(&self) {
         let options = IndexOptions::builder().unique(true).build();
         let model = IndexModel::builder()
-            .keys(doc! { "query": 1 })
+            .keys(doc! { "ip": 1 })
             .options(options)
             .build();
         self.client
@@ -84,7 +84,7 @@ impl DbOps for Db {
         Ok(result.inserted_id.as_object_id().unwrap())
     }
     async fn get_ip(&self, ip: String) -> Result<Option<GeoLocation>, Error> {
-        let get_geolocation = self.collection.find_one(doc! { "query": &ip }).await?;
+        let get_geolocation = self.collection.find_one(doc! { "ip": &ip }).await?;
         Ok(get_geolocation)
     }
     //     // async fn delete_ip(&self, ip: String) -> Result<DeleteResult, Error> {

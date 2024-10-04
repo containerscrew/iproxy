@@ -28,7 +28,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Enable logging
     setup_logger(config.logging.log_level);
-    info!("Hello iproxy");
 
     // Init database
     let db = Db::init(
@@ -44,16 +43,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let app = create_router(Arc::new(AppState { db: db.clone() })); //.layer(cors);
     let app = app.fallback(handler_404);
 
-    // Mongodb connection
-    // TODO: manage mongodb connection. If connection fails, can we continue?
-    // let db = Arc::new(Db::new(
-    //     config.database.endpoint,
-    //     config.database.db_name,
-    //     config.database.collection_name,
-    // ).await.expect("Can't connect to database"));
-
     // Create index
     db.create_ips_index().await;
+
+    info!("Server started successfully!");
 
     let addr = format!("{}:{}", config.server.address, config.server.port);
     info!("Listening on {}", addr);
