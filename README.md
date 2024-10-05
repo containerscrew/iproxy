@@ -158,6 +158,7 @@ mongorestore --uri="mongodb+srv://USERNAME:PASSWORD@XXXXX.XXXX.mongodb.net/?retr
 # TO DO
 
 * Testing and error handling with custom errors ([MyErrors](./src/error.rs))
+* Generate possible public ipv4 https://www.criminalip.io/ip-ranges
 
 # Pending to fix
 
