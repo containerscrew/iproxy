@@ -1,0 +1,19 @@
+services:
+  mongodb:
+    image: docker.io/mongo:latest # TODO: do not use latest, use a specific version
+    container_name: mongo
+    networks:
+      - iproxy-mongodb
+    restart: unless-stopped
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+      - MONGO_INITDB_DATABASE=iproxy
+    volumes:
+      - ~/Documents/DockerData/mongoIproxy:/data/db
+
+networks:
+  iproxy-mongodb:
+    driver: bridge

@@ -23,8 +23,15 @@ pub struct AppState {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Determine which configuration file to load based on the IS_LOCAL environment variable
+    let config_file = if std::env::var("IS_LOCAL").unwrap_or_else(|_| "false".to_string()) == "true"
+    {
+        "local.config.toml"
+    } else {
+        "config.toml"
+    };
     // Load configuration file
-    let config = Config::from_file("config.toml");
+    let config = Config::from_file(config_file);
 
     // Enable logging
     setup_logger(config.logging.log_level);

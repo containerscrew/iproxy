@@ -17,6 +17,8 @@
   - [Run your first query](#run-your-first-query)
   - [Api alive?](#api-alive?)
   - [Stop the stack](#stop-the-stack)
+- [Local development](#local-development)
+  - [Stop local mongodb](#stop-local-mongodb)
 - [Visualize data](#visualize-data)
 - [Import from local mongodb to mongodb atlas](#import-from-local-mongodb-to-mongodb-atlas)
   - [Install mongodb tools](#install-mongodb-tools)
@@ -107,6 +109,19 @@ curl http://127.0.0.1:8000/api/v1/health
 
 ```bash
 make compose-down
+```
+
+# Local development
+
+```shell
+cargo install cargo-watch
+make local-development
+```
+
+## Stop local mongodb
+
+```shell
+docker-compose -f local.compose.yml down
 ```
 
 # Visualize data

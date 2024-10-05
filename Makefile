@@ -27,8 +27,11 @@ package: ## Package binary with zip
 git-cliff: ## Run git cliff
 	git cliff --output CHANGELOG.md
 
-autoreload: ## Run the API with autoreload
-	systemfd --no-pid -s http::3000 -- cargo watch -x run
+# autoreload: ## Run the API with autoreload
+# 	systemfd --no-pid -s http::3000 -- cargo watch -x run
+
+autoreload: ## Run the API with autoreload. Run cargo install cargo-watch
+	cargo watch -x run --release
 
 container-build: ## Build the container
 	docker build -t ${BINARY_NAME}:latest .
@@ -41,3 +44,7 @@ compose-up: ## Run docker-compose up
 
 compose-down: ## Run docker-compose down
 	docker-compose -f compose.yml down
+
+local-development: ## Run compose for local development
+	docker-compose -f local.compose.yml up -d --force-recreate ;\
+	IS_LOCAL=true cargo-watch -x run
