@@ -48,3 +48,6 @@ compose-down: ## Run docker-compose down
 local-development: ## Run compose for local development
 	docker-compose -f local.compose.yml up -d --force-recreate ;\
 	IS_LOCAL=true cargo-watch -x run
+
+local-development-down: ## Run compose for local development
+	docker-compose -f local.compose.yml down

@@ -80,8 +80,10 @@ Example, from [compose.yml](./compose.yml):
   mongodb:
     ....other config
     volumes:
-      - ~/Documents/DockerData/mongoIproxy:/data/db # this line!!
+      - /mnt/ssd/iproxy:/data/db # this line!!
 ```
+
+`In mi case, I'm mapping all the data using an external SSD mounted in /mnt/ssd`
 
 Now, launch all the stack:
 
@@ -121,7 +123,7 @@ make local-development
 ## Stop local mongodb
 
 ```shell
-docker-compose -f local.compose.yml down
+make local-development-down
 ```
 
 # Visualize data
