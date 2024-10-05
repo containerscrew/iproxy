@@ -22,7 +22,7 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=admin
       - MONGO_INITDB_DATABASE=iproxy
     volumes:
-      - ~/Documents/DockerData/mongoIproxy:/data/db
+      - /mnt/ssd/iproxy:/data/db
 
 networks:
   iproxy-mongodb:
