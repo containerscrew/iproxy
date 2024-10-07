@@ -88,6 +88,7 @@ Example, from [compose.yml](./compose.yml):
 Now, launch all the stack:
 
 ```bash
+docker network create iproxy
 make compose-up-build
 ```
 
@@ -116,7 +117,8 @@ make compose-down
 # Local development
 
 ```shell
-cargo install cargo-watch
+cargo install cargo-watch systemfd
+docker network create iproxy 
 make local-development
 ```
 

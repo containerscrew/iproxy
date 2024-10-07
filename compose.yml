@@ -6,14 +6,14 @@ services:
     restart: unless-stopped
     container_name: iproxy
     networks:
-      - iproxy-mongodb
+      - iproxy
     ports:
       - 8000:8000
   mongodb:
     image: docker.io/mongo:latest # TODO: do not use latest, use a specific version
     container_name: mongo
     networks:
-      - iproxy-mongodb
+      - iproxy
     restart: unless-stopped
     ports:
       - 27017:27017
@@ -24,6 +24,8 @@ services:
     volumes:
       - /mnt/ssd/iproxy:/data/db
 
+# docker network create iproxy 
 networks:
-  iproxy-mongodb:
+  iproxy:
     driver: bridge
+    external: true

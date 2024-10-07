@@ -3,7 +3,7 @@ address = "0.0.0.0"
 port = 8000
 
 [logging]
-log_level = "trace"
+log_level = "info"
 
 [database]
 # If you are running iproxy in localhost, change the address from mongodb:27017 to localhost:27017

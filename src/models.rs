@@ -4,10 +4,10 @@ use serde::{Deserialize, Serialize};
 pub struct GeoLocation {
     status: String,
     city: String,
-    #[serde(rename = "countryCode")]
-    country_code: String,
-    #[serde(rename = "regionName")]
-    region_name: String,
+    #[serde(rename(serialize = "country_code", deserialize = "countryCode"))]
+    country_code: Option<String>, // Changed to Option
+    #[serde(rename(serialize = "region_name", deserialize = "regionName"))]
+    region_name: Option<String>, // Changed to Option
     region: String,
     country: String,
     zip: String,
@@ -16,8 +16,8 @@ pub struct GeoLocation {
     timezone: String,
     isp: String,
     org: String,
-    #[serde(rename = "as")]
-    ass: String,
+    #[serde(rename(serialize="as", deserialize="as"))]
+    as_field: Option<String>, // Adjusted field name for clarity
     #[serde(rename(serialize = "ip", deserialize = "query"))]
-    ip: String,
+    ip: Option<String>,
 }
