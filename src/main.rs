@@ -4,6 +4,7 @@ use crate::db::Db;
 use crate::handlers::handler_404;
 use crate::logger::setup_logger;
 use crate::router::create_router;
+use std::net::SocketAddr;
 use std::sync::Arc;
 use tracing::info;
 
@@ -19,22 +20,18 @@ mod utils;
 
 pub struct AppState {
     db: Db,
+    pub use_proxy: bool,
 }
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // Determine which configuration file to load based on the IS_LOCAL environment variable
-    let config_file = if std::env::var("IS_LOCAL").unwrap_or_else(|_| "false".to_string()) == "true"
-    {
-        "local.config.toml"
-    } else {
-        "config.toml"
-    };
-    // Load configuration file
-    let config = Config::from_file(config_file);
+    // Load configuration file. Set the CONFIG_FILE_PATH env var. Example: CONFIG_FILE_PATH=./config.toml
+    let config = Config::load_config();
 
     // Enable logging
     setup_logger(config.logging.log_level);
+
+    info!("starting iproxy server");
 
     // Init database
     let db = Db::init(
@@ -47,18 +44,25 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // TODO: control CORS
 
     // Run server
-    let app = create_router(Arc::new(AppState { db: db.clone() })); //.layer(cors);
+    let app = create_router(Arc::new(AppState {
+        db: db.clone(),
+        use_proxy: config.server.use_proxy,
+    })); //.layer(cors);
     let app = app.fallback(handler_404);
 
     // Create index
     db.create_ips_index().await;
 
-    info!("Server started successfully!");
-
     let addr = format!("{}:{}", config.server.address, config.server.port);
-    info!("Listening on {}", addr);
+    info!("listening on {}", addr);
+    let addr = SocketAddr::from(([0, 0, 0, 0], config.server.port));
     let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
-    axum::serve(listener, app).await.unwrap();
-
+    axum::serve(
+        listener,
+        // Don't forget to add `ConnectInfo` if you aren't behind a proxy
+        app.into_make_service_with_connect_info::<SocketAddr>(),
+    )
+    .await
+    .unwrap();
     Ok(())
 }

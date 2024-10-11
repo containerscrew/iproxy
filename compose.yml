@@ -24,7 +24,7 @@ services:
     volumes:
       - /mnt/ssd/iproxy:/data/db
 
-# docker network create iproxy 
+# docker network create iproxy
 networks:
   iproxy:
     driver: bridge

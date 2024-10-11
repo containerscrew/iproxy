@@ -118,7 +118,7 @@ make compose-down
 
 ```shell
 cargo install cargo-watch systemfd
-docker network create iproxy 
+docker network create iproxy
 make local-development
 ```
 

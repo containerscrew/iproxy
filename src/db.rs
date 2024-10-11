@@ -48,8 +48,8 @@ impl Db {
 
         // Send a ping to confirm a successful connection
         match database.run_command(doc! { "ping": 1 }).await {
-            Ok(_) => info!("Successfully connected to database"),
-            Err(e) => error!("Error connecting to database: {}", e),
+            Ok(_) => info!("successfully connected to database"),
+            Err(e) => error!("error connecting to database: {}", e),
         }
 
         let collection = database.collection(&collection);
