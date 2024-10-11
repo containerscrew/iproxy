@@ -11,10 +11,14 @@ pub fn setup_logger(log_level: String) {
     };
 
     tracing_subscriber::fmt()
-        // .json()
-        .with_thread_names(true)
+        .json()
+        .with_thread_names(false)
         .with_max_level(log_level)
         .with_span_events(FmtSpan::FULL)
-        .with_file(true)
+        .with_file(false)
+        .with_target(false)
+        .with_current_span(true)
+        .flatten_event(true)
+        // .with_timer(CustomTimeFormatter)
         .init();
 }

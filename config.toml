@@ -1,6 +1,7 @@
 [server]
 address = "0.0.0.0"
 port = 8000
+use_proxy = true
 
 [logging]
 log_level = "info"

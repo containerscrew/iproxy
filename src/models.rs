@@ -16,7 +16,7 @@ pub struct GeoLocation {
     timezone: String,
     isp: String,
     org: String,
-    #[serde(rename(serialize="as", deserialize="as"))]
+    #[serde(rename(serialize = "as", deserialize = "as"))]
     as_field: Option<String>, // Adjusted field name for clarity
     #[serde(rename(serialize = "ip", deserialize = "query"))]
     ip: Option<String>,

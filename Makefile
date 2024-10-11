@@ -45,7 +45,7 @@ compose-down: ## Run docker-compose down
 
 local-development: ## Run compose for local development
 	docker-compose -f local.compose.yml up -d --force-recreate ;\
-	IS_LOCAL=true systemfd --no-pid -s http::3000 -- cargo watch -w src -x run
+	CONFIG_FILE_PATH=./local.config.toml systemfd --no-pid -s http::3000 -- cargo watch -w src -x run
 
 local-development-down: ## Run compose for local development
 	docker-compose -f local.compose.yml down

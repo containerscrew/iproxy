@@ -23,14 +23,14 @@ pub async fn get_ip(
     match app_state.db.get_ip(ip.clone()).await {
         Ok(Some(ip_geolocation)) => {
             // If IP data exists, return it as JSON
-            info!("Ip {} already registered", &ip);
+            trace!("ip {} already registered in database", &ip);
             return Ok((
                 StatusCode::OK,
                 Json(serde_json::to_value(ip_geolocation).unwrap()),
             ));
         }
         Ok(None) => {
-            info!("Ip {} not found in database", &ip);
+            trace!("ip {} not found in database", &ip);
         }
         Err(e) => {
             warn!("Error getting ip data: {}", e);
@@ -43,14 +43,14 @@ pub async fn get_ip(
     }
 
     // If IP data does not exist in the database, get it from the external service
-    match get_geolocation(&ip).await {
+    match get_geolocation(&ip, app_state.use_proxy).await {
         Ok(ip_geolocation) => {
-            info!("Retriveing geolocation data for {}", &ip);
+            trace!("retriveing geolocation data for {}", &ip);
 
             // Serialize the geolocation data to validate its structure
             match serialize_geolocation_data(&ip_geolocation.to_string()) {
                 Ok(data) => {
-                    trace!("Geolocation data serialized successfully");
+                    trace!("geolocation data serialized successfully");
 
                     // Try to insert the geolocation data into the database
                     match app_state.db.insert_ip(&data).await {

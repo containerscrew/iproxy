@@ -18,5 +18,5 @@ while IFS= read -r ip; do
     response=$(curl -s "${url}/${ip}")
     # Print the response
     echo "Response for $ip: $response"
-    sleep 2 # Sleep 2 seconds, to avoid being blocked with 429 too many requests
+    #sleep 2 # Sleep 2 seconds, to avoid being blocked with 429 too many requests
 done < "$1"
