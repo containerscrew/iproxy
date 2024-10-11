@@ -63,9 +63,9 @@ pub async fn get_ip(
                 }
                 Err(e) => {
                     warn!(
-                        "Error serializing geolocation data: {}. External api response {}",
-                        e,
-                        ip_geolocation.to_string()
+                        erro = %e,
+                        external_api_error = %ip_geolocation.0,
+                        "error serializing geolocation data"
                     );
                     // Return the original JSON from the external API if serialization fails
                     Ok((StatusCode::NOT_FOUND, ip_geolocation))
