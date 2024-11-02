@@ -2,7 +2,7 @@ services:
   iproxy:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ./Dockerfile
     restart: unless-stopped
     container_name: iproxy
     networks:
@@ -23,6 +23,19 @@ services:
       - MONGO_INITDB_DATABASE=iproxy
     volumes:
       - /mnt/ssd/iproxy:/data/db
+
+#  mongodb_exporter:
+#    image: docker.io/percona/mongodb_exporter:latest
+#    container_name: mongodb_exporter
+#    networks:
+#      - iproxy
+#    restart: unless-stopped
+#    ports:
+#      - 9216:9216
+#    environment:
+#      - MONGODB_URI=mongodb://admin:admin@mongodb:27017
+#    depends_on:
+#      - mongodb
 
 # docker network create iproxy
 networks:

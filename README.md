@@ -74,7 +74,7 @@ With [this file](./config.toml) located in the root of this repository, you will
 |:----------------------------|
 | Before start the docker-compose, change the directory where you want to save the mongodb data     |
 
-Example, from [compose.yml](./compose.yml):
+Example, from [compose.yml](compose.yml):
 
 ```yaml
   mongodb:
@@ -163,6 +163,8 @@ mongorestore --uri="mongodb+srv://USERNAME:PASSWORD@XXXXX.XXXX.mongodb.net/?retr
 
 * Testing and error handling with custom errors ([MyErrors](./src/error.rs))
 * Generate possible public ipv4 https://www.criminalip.io/ip-ranges
+* Prometheus metrics
+* JWT token
 
 # Pending to fix
 

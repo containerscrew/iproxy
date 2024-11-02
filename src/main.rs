@@ -6,6 +6,9 @@ use crate::logger::setup_logger;
 use crate::router::create_router;
 use std::net::SocketAddr;
 use std::sync::Arc;
+use axum::http::{HeaderValue, Method};
+use axum::http::header::{ACCEPT, AUTHORIZATION, CONTENT_TYPE};
+use tower_http::cors::CorsLayer;
 use tracing::info;
 
 mod config;
@@ -29,7 +32,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let config = Config::load_config();
 
     // Enable logging
-    setup_logger(config.logging.log_level);
+    setup_logger(config.logging.log_level, config.logging.log_type);
 
     info!("starting iproxy server");
 
@@ -41,13 +44,19 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     )
     .await?;
 
-    // TODO: control CORS
+    // Cors
+    let cors = CorsLayer::new()
+        .allow_origin("http://127.0.0.1:8000".parse::<HeaderValue>().unwrap())
+        .allow_methods([Method::GET, Method::POST, Method::PATCH, Method::DELETE])
+        .allow_credentials(true)
+        .allow_headers([AUTHORIZATION, ACCEPT, CONTENT_TYPE]);
 
     // Run server
     let app = create_router(Arc::new(AppState {
         db: db.clone(),
         use_proxy: config.server.use_proxy,
-    })); //.layer(cors);
+    })).layer(cors);
+
     let app = app.fallback(handler_404);
 
     // Create index
