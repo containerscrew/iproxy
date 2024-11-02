@@ -7,7 +7,7 @@ use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use axum::Json;
 use std::sync::Arc;
-use tracing::{info, trace, warn};
+use tracing::{trace, warn};
 
 pub async fn health_checker_handler() -> impl IntoResponse {
     // Healthcheck response
@@ -54,7 +54,7 @@ pub async fn get_ip(
 
                     // Try to insert the geolocation data into the database
                     match app_state.db.insert_ip(&data).await {
-                        Ok(_) => info!("Ip {} registered in database", ip),
+                        Ok(_) => trace!("Ip {} registered in database", ip),
                         Err(e) => warn!("Error inserting IP data into database: {}", e),
                     }
 

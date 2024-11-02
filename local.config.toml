@@ -4,7 +4,8 @@ port = 8000
 use_proxy = false
 
 [logging]
-log_level = " info"
+log_level = "info" # trace, debug, info, warn or error. Defaults to info if not set
+log_type = "text" # text or json. Defaults to text if not set
 
 [database]
 # If you are running iproxy in localhost, change the address from mongodb:27017 to localhost:27017
