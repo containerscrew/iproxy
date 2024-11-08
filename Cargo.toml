@@ -22,7 +22,7 @@ async-trait = "0.1.81"
 toml = "0.8.19"
 mongodb = "3.0.1"
 bson = "2.11.0"
-thiserror = "1.0.63"
+thiserror = "2.0.1"
 openssl = { version = "0.10.59", features = ["vendored"] }
 rand = "0.8.5"
 tower-http = { version = "0.6.1", features = ["cors", "trace"] }
