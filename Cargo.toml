@@ -13,7 +13,7 @@ description = "Proxy server for IP geolocation. Use external services to get the
 [dependencies]
 tracing = "0.1.40"
 tracing-subscriber = { version = "0.3.18", features = ["json", "fmt"] }
-axum = "0.7.5"
+axum = "0.8.1"
 serde_json = "1.0.122"
 serde = { version = "1.0.205", features = ["derive"] }
 tokio = { version = "1.39.2", features = ["rt", "rt-multi-thread", "macros", "full"] }
