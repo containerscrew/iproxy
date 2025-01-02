@@ -49,3 +49,9 @@ local-development: ## Run compose for local development
 
 local-development-down: ## Run compose for local development
 	docker-compose -f local.compose.yml down
+
+podman-up: ## Run podman-compose
+	podman-compose -f compose.yml up -d
+
+podman-down: ## Run podman-compose down
+	podman-compose -f compose.yml down
