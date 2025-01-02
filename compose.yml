@@ -4,7 +4,7 @@ services:
     container_name: nginx-proxy
     restart: unless-stopped
     ports:
-      - 80:80
+      - 8080:80
     networks:
       - iproxy
     environment:
