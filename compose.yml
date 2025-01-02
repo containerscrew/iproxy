@@ -11,6 +11,8 @@ services:
       - VIRTUAL_HOST=/run/secrets/VIRTUAL_HOST
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    cap_add:
+      - NET_BIND_SERVICE
 
   iproxy:
     build:
