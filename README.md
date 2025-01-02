@@ -103,8 +103,8 @@ You can install the binary using cargo:
 
 ```bash
 cargo install iproxy
+# Then run the command iproxy (config.toml is neccesary in the same dir)
 ```
-
 
 ## Run your first query
 
