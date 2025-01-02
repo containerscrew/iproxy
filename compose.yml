@@ -24,6 +24,8 @@ services:
       - iproxy
     ports:
       - 127.0.0.1:8000:8000
+    volumes:
+      - $PWD/config.toml:/app/config.toml
 
   mongodb:
     image: docker.io/mongo:latest
