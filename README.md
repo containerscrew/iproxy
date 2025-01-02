@@ -14,6 +14,7 @@
 - [Using the API](#using-the-api)
   - [Config.toml](#config.toml)
   - [Launch the `docker-compose`](#launch-the-`docker-compose`)
+  - [Installing the binary](#installing-the-binary)
   - [Run your first query](#run-your-first-query)
   - [Api alive?](#api-alive?)
   - [Stop the stack](#stop-the-stack)
@@ -34,6 +35,7 @@
 ![Rust](https://img.shields.io/badge/rust-%23000000.svg?style=for-the-badge&logo=rust&logoColor=white)
 [![License](https://img.shields.io/github/license/containerscrew/iproxy)](/LICENSE)
 ![Code Size](https://img.shields.io/github/languages/code-size/containerscrew/mtoc)
+![Crates.io Version](https://img.shields.io/crates/v/iproxy)
 
 # Introduction
 
@@ -94,6 +96,15 @@ make compose-up-build
 ```
 
 This will starts the `iproxy` container and `mongodb`.
+
+## Installing the binary
+
+You can install the binary using cargo:
+
+```bash
+cargo install iproxy
+```
+
 
 ## Run your first query
 
