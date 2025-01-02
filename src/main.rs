@@ -4,10 +4,10 @@ use crate::db::Db;
 use crate::handlers::handler_404;
 use crate::logger::setup_logger;
 use crate::router::create_router;
+use axum::http::header::{ACCEPT, AUTHORIZATION, CONTENT_TYPE};
+use axum::http::{HeaderValue, Method};
 use std::net::SocketAddr;
 use std::sync::Arc;
-use axum::http::{HeaderValue, Method};
-use axum::http::header::{ACCEPT, AUTHORIZATION, CONTENT_TYPE};
 use tower_http::cors::CorsLayer;
 use tracing::info;
 
@@ -55,7 +55,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let app = create_router(Arc::new(AppState {
         db: db.clone(),
         use_proxy: config.server.use_proxy,
-    })).layer(cors);
+    }))
+    .layer(cors);
 
     let app = app.fallback(handler_404);
 

@@ -1,4 +1,4 @@
-use tracing_subscriber::fmt::{format::FmtSpan};
+use tracing_subscriber::fmt::format::FmtSpan;
 
 pub fn setup_logger(log_level: String, format: String) {
     let log_level = match log_level.as_str() {
@@ -22,6 +22,6 @@ pub fn setup_logger(log_level: String, format: String) {
     match format.as_str() {
         "json" => base_subscriber.json().init(),
         "text" => base_subscriber.init(),
-        _ => base_subscriber.init(), 
+        _ => base_subscriber.init(),
     };
 }

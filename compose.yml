@@ -1,4 +1,17 @@
 services:
+  nginx-proxy:
+    image: docker.io/nginx:1.27.2-alpine
+    container_name: nginx-proxy
+    restart: unless-stopped
+    ports:
+      - 80:80
+    networks:
+      - iproxy
+    environment:
+      - VIRTUAL_HOST=/run/secrets/VIRTUAL_HOST
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+
   iproxy:
     build:
       context: .
@@ -7,38 +20,31 @@ services:
     container_name: iproxy
     networks:
       - iproxy
-    ports:
-      - 8000:8000
+
   mongodb:
-    image: docker.io/mongo:latest # TODO: do not use latest, use a specific version
+    image: docker.io/mongo:latest
     container_name: mongo
     networks:
       - iproxy
     restart: unless-stopped
-    ports:
-      - 27017:27017
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=admin
-      - MONGO_INITDB_DATABASE=iproxy
+      - MONGO_INITDB_ROOT_USERNAME=/run/secrets/MONGO_INITDB_ROOT_USERNAME
+      - MONGO_INITDB_ROOT_PASSWORD=/run/secrets/MONGO_INITDB_ROOT_PASSWORD
+      - MONGO_INITDB_DATABASE=/run/secrets/MONGO_INITDB_DATABASE
     volumes:
       - /mnt/ssd/iproxy:/data/db
 
-#  mongodb_exporter:
-#    image: docker.io/percona/mongodb_exporter:latest
-#    container_name: mongodb_exporter
-#    networks:
-#      - iproxy
-#    restart: unless-stopped
-#    ports:
-#      - 9216:9216
-#    environment:
-#      - MONGODB_URI=mongodb://admin:admin@mongodb:27017
-#    depends_on:
-#      - mongodb
-
-# docker network create iproxy
 networks:
   iproxy:
     driver: bridge
-    external: true
+    external: false
+
+secrets:
+  MONGO_INITDB_DATABASE:
+    file: .env
+  MONGO_INITDB_ROOT_USERNAME:
+    file: .env
+  MONGO_INITDB_ROOT_PASSWORD:
+    file: .env
+  VIRTUAL_HOST:
+    file: .env
