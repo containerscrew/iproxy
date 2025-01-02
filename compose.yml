@@ -23,7 +23,7 @@ services:
     networks:
       - iproxy
     ports:
-      - 127.0.0.1:8080:8080
+      - 127.0.0.1:8000:8000
 
   mongodb:
     image: docker.io/mongo:latest
