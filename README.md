@@ -88,7 +88,8 @@ Example, from [compose.yml](compose.yml):
 Now, launch all the stack:
 
 ```bash
-docker network create iproxy
+cp .env-example .env
+# EDIT .env file as you need!!!!!
 make compose-up-build
 ```
 
