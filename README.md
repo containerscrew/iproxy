@@ -52,10 +52,9 @@ Other possible solutions (not implemented):
 * https://ipstack.com/
 * https://ip.guide
 
-
 # How works
 
-You will make a request to your API endpoint, for example, `curl http://127.0.0.1/api/v1/1.1.1.1`, and the API will first check if the data exists in the database. If it does not exist, it will retrieve the information from the external website mentioned above. The next time you query the same IP, the data will be retrieved from MongoDB, avoiding the external query.
+You will make a request to your API endpoint, for example, `curl http://localhost:8080/1.1.1.1`, and the API will first check if the data exists in the database. If it does not exist, it will retrieve the information from the external website mentioned above. The next time you query the same IP, the data will be retrieved from MongoDB, avoiding the external query.
 
 # Example
 
@@ -75,28 +74,13 @@ With [this file](./config.toml) located in the root of this repository, you will
 
 | :warning: WARNING           |
 |:----------------------------|
-| Before start the docker-compose, change the directory where you want to save the mongodb data     |
-
-Example, from [compose.yml](compose.yml):
-
-```yaml
-  mongodb:
-    ....other config
-    volumes:
-      - /mnt/ssd/iproxy:/data/db # this line!!
-```
-
-`In mi case, I'm mapping all the data using an external SSD mounted in /mnt/ssd`
-
-Now, launch all the stack:
+| Before start the docker-compose, change the password for mongodb root user. Change it in `config.toml` and `compose.yml`.    |
 
 ```bash
-cp .env-example .env
-# EDIT .env file as you need!!!!!
 make compose-up-build
 ```
 
-This will starts the `iproxy` container and `mongodb`.
+This will starts the `iproxy` container and `mongodb` and `nginx-proxy`.
 
 ## Installing the binary
 
@@ -178,7 +162,8 @@ mongorestore --uri="mongodb+srv://USERNAME:PASSWORD@XXXXX.XXXX.mongodb.net/?retr
 * Generate possible public ipv4 https://www.criminalip.io/ip-ranges
 * Prometheus metrics
 * JWT token
-* Build takes too long due to `openssl` dependency.
+* Build takes too long due to `openssl` dependency
+* Create `/me` endpoint to retrieve user geolocation ip data
 
 # Pending to fix
 

@@ -1,10 +1,6 @@
 #! /bin/bash
 
-# Archive with IPs
-#input_file="$HOME/Downloads/message.txt"
-
-# URL a la que se enviarán las IPs
-url="https://iproxy.containerscrew.com"
+url="http://127.0.0.1:8000/api/v1"
 
 # Verify if the file exists
 if [[ ! -f "$1" ]]; then

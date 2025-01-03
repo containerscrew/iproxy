@@ -1,6 +1,6 @@
 [package]
 name = "iproxy"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 authors = ["containerscrew info@containerscrew.com"]
 repository = "https://github.com/containerscrew/iproxy"
@@ -23,6 +23,6 @@ toml = "0.8.19"
 mongodb = "3.0.1"
 bson = "2.11.0"
 thiserror = "2.0.9"
-openssl = { version = "0.10.59", features = ["vendored"] }
+openssl = { version = "0.10.59"}
 rand = "0.8.5"
 tower-http = { version = "0.6.1", features = ["cors", "trace"] }

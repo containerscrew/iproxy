@@ -62,13 +62,6 @@ fn configure_client(use_proxy: bool) -> Result<Client, Error> {
 
 // Main function to perform the request, retrying if the request fails
 pub async fn get_geolocation(info: &String, use_proxy: bool) -> Result<Json<Value>, Error> {
-    // Log info about proxy status
-    if use_proxy {
-        trace!("using proxy to get geolocation data");
-    } else {
-        trace!("getting geolocation data without proxy");
-    }
-
     let mut attempts = 0; // Number of attempts
 
     while attempts < MAX_RETRIES {

@@ -6,6 +6,8 @@ use axum::extract::{Path, State};
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use axum::Json;
+use bson::Bson;
+use serde_json::Value;
 use std::sync::Arc;
 use tracing::{trace, warn};
 
@@ -44,8 +46,12 @@ pub async fn get_ip(
 
     // If IP data does not exist in the database, get it from the external service
     match get_geolocation(&ip, app_state.use_proxy).await {
-        Ok(ip_geolocation) => {
+        Ok(Json(ip_geolocation)) => {
             trace!("retriveing geolocation data for {}", &ip);
+
+            // Here we can convert the response directly to the bson document instead of serializing into a custom struct
+            // TODO!
+            let bson_data: Bson = bson::to_bson(&ip_geolocation).unwrap();
 
             // Serialize the geolocation data to validate its structure
             match serialize_geolocation_data(&ip_geolocation.to_string()) {
@@ -59,16 +65,16 @@ pub async fn get_ip(
                     }
 
                     // Return the original JSON from the external service
-                    Ok((StatusCode::OK, ip_geolocation))
+                    Ok((StatusCode::OK, Json(ip_geolocation)))
                 }
                 Err(e) => {
                     warn!(
                         erro = %e,
-                        external_api_error = %ip_geolocation.0,
+                        external_api_error = %ip_geolocation,
                         "error serializing geolocation data"
                     );
                     // Return the original JSON from the external API if serialization fails
-                    Ok((StatusCode::NOT_FOUND, ip_geolocation))
+                    Ok((StatusCode::NOT_FOUND, Json(ip_geolocation)))
                 }
             }
         }
