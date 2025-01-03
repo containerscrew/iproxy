@@ -8,7 +8,6 @@ log_level = "info" # trace, debug, info, warn or error. Defaults to info if not 
 log_type = "json" # text or json. Defaults to text if not set
 
 [database]
-# If you are running iproxy in localhost, change the address from mongodb:27017 to localhost:27017
-endpoint = "mongodb://admin:admin@mongodb:27017/?maxPoolSize=20&w=majority"
+endpoint = "mongodb://admin:changeme@mongodb:27017/?maxPoolSize=20&w=majority"
 db_name = "iproxy"
 collection_name = "ips"

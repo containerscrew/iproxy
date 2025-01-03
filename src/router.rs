@@ -16,7 +16,7 @@ pub fn create_router(app_state: Arc<AppState>) -> Router {
             &(API_V1_BASE.to_string() + "/health"),
             get(health_checker_handler),
         )
-        .route(&(API_V1_BASE.to_string() + "/:ip"), get(get_ip))
+        .route(&(API_V1_BASE.to_string() + "/{ip}"), get(get_ip))
         .with_state(app_state)
         .fallback(handler_404)
         .layer(TraceLayer::new_for_http().on_request(
