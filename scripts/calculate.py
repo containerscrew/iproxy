@@ -66,7 +66,7 @@ def main() -> None:
     # public_subnets = ["13.0.0.0/8"]
 
     # Directory to store the IP list files
-    output_directory = "/mnt/ssd/ip_list"
+    output_directory = "./ip_list"
 
     # Calculate the available public IPs excluding private ranges
     print(f"Calculating IPs for {len(public_subnets)} subnets")

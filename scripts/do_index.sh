@@ -4,7 +4,7 @@
 #input_file="$HOME/Downloads/message.txt"
 
 # URL a la que se enviarán las IPs
-url="http://127.0.0.1:8000/api/v1"
+url="https://iproxy.containerscrew.com"
 
 # Verify if the file exists
 if [[ ! -f "$1" ]]; then
