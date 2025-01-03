@@ -178,6 +178,7 @@ mongorestore --uri="mongodb+srv://USERNAME:PASSWORD@XXXXX.XXXX.mongodb.net/?retr
 * Generate possible public ipv4 https://www.criminalip.io/ip-ranges
 * Prometheus metrics
 * JWT token
+* Build takes too long due to `openssl` dependency.
 
 # Pending to fix
 

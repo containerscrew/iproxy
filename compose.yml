@@ -13,9 +13,10 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
 
   iproxy:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
+    # build:
+    #   context: .
+    #   dockerfile: ./Dockerfile
+    image: docker.io/containerscrew/iproxy:v0.2.0
     restart: unless-stopped
     container_name: iproxy
     networks:
