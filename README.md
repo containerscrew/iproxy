@@ -36,6 +36,7 @@
 [![License](https://img.shields.io/github/license/containerscrew/iproxy)](/LICENSE)
 ![Code Size](https://img.shields.io/github/languages/code-size/containerscrew/mtoc)
 ![Crates.io Version](https://img.shields.io/crates/v/iproxy)
+![Latest Tag](https://img.shields.io/github/v/tag/containerscrew/iproxy?sort=semver)
 
 # Introduction
 
