@@ -16,42 +16,23 @@ mtoc: ## Create table of contents with mtoc
 pre-commit: ## Run pre-commit
 	pre-commit run -a
 
-run: ## Run the code locally with cargo
-	cargo run
-
 package: ## Package binary with zip
 	zip -j ${BINARY_NAME}-$(ARCH).zip target/$(TARGET)/release/${BINARY_NAME}
 
 git-cliff: ## Run git cliff
 	git cliff --output CHANGELOG.md
 
-autoreload: ## Run the API with autoreload. Run cargo install cargo install cargo-watch systemfd
+run-with-autoreload: ## Run the API with autoreload. Run: $ cargo install cargo-watch systemfd
 	systemfd --no-pid -s http::3000 -- cargo watch -w src -x run
 
-container-build: ## Build the container
-	docker build -t ${BINARY_NAME}:latest .
-
 create-iproxy-network: ## Create iproxy network
-	docker network create iproxy
+	podman network create iproxy
 
-compose-up-build: ## Run docker-compose up and build
-	docker-compose -f compose.yml up -d --build --force-recreate
+local-dev: ## Start local development
+	podman run -itd --rm --name mongo -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=admin -e MONGO_INITDB_DATABASE=iproxy docker.io/mongo:latest
 
-compose-up: ## Run docker-compose up
-	docker-compose -f compose.yml up -d --force-recreate
-
-compose-down: ## Run docker-compose down
-	docker-compose -f compose.yml down
-
-local-development: ## Run compose for local development
-	docker-compose -f local.compose.yml up -d --force-recreate ;\
-	CONFIG_FILE_PATH=./local.config.toml systemfd --no-pid -s http::3000 -- cargo watch -w src -x run
-
-local-development-down: ## Run compose for local development
-	docker-compose -f local.compose.yml down
-
-podman-up: ## Run podman-compose
+compose-up: ## Run podman-compose
 	podman-compose -f compose.yml up -d
 
-podman-down: ## Run podman-compose down
+compose-down: ## Run podman-compose down
 	podman-compose -f compose.yml down
