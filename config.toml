@@ -5,9 +5,12 @@ use_proxy = false
 
 [logging]
 log_level = "info" # trace, debug, info, warn or error. Defaults to info if not set
-log_type = "json" # text or json. Defaults to text if not set
+log_type = "text" # text or json. Defaults to text if not set
 
 [database]
-endpoint = "mongodb://admin:changeme@mongodb:27017/?maxPoolSize=20&w=majority"
+# For local testing
+endpoint = "mongodb://admin:admin@127.0.0.1:27017/?maxPoolSize=20&w=majority"
+# With compose
+#endpoint = "mongodb://admin:changeme@mongodb:27017/?maxPoolSize=20&w=majority"
 db_name = "iproxy"
 collection_name = "ips"

@@ -1,17 +1,18 @@
-use crate::models::GeoLocation;
 use async_trait::async_trait;
-use bson::doc;
+use bson::{doc, Bson};
 use bson::oid::ObjectId;
 use mongodb::error::Error;
-use mongodb::options::{ClientOptions, IndexOptions, ServerApi, ServerApiVersion};
+use mongodb::options::{ClientOptions, FindOneOptions, IndexOptions, ServerApi, ServerApiVersion};
 use mongodb::{Client, Collection, Database, IndexModel};
+use serde_json::Value;
+use std::iter::Filter;
 use std::time::Duration;
 use tracing::{error, info};
 
 #[async_trait]
 pub trait DbOps {
-    async fn insert_ip(&self, geolocation: &GeoLocation) -> Result<ObjectId, Error>;
-    async fn get_ip(&self, ip: String) -> Result<Option<GeoLocation>, Error>;
+    async fn insert_ip(&self, data: &Value) -> Result<ObjectId, Error>;
+    async fn get_ip(&self, ip: String) -> Result<Option<Value>, Error>;
     // async fn delete_ip(&self, ip: String) -> Result<DeleteResult, Error>;
     // async fn update_ip(&self, ip: String, geolocation: &GeoLocation) -> Result<UpdateResult, Error>;
 }
@@ -21,7 +22,7 @@ pub trait DbOps {
 pub struct Db {
     client: Client,
     database: Database,
-    collection: Collection<GeoLocation>,
+    collection: Collection<Value>,
 }
 
 // type Result<T> = std::result::Result<T, MyError>;
@@ -61,16 +62,18 @@ impl Db {
         })
     }
 
-    // Creates an index on the "ip" field to force the values to be unique.
+    // Creates an index on the "query" field to force the values to be unique.
     pub async fn create_ips_index(&self) {
         let options = IndexOptions::builder().unique(true).build();
+
         let model = IndexModel::builder()
-            .keys(doc! { "ip": 1 })
+            .keys(doc! { "query": 1 })
             .options(options)
             .build();
+
         self.client
             .database(self.database.name())
-            .collection::<GeoLocation>(self.collection.name())
+            .collection::<Value>(self.collection.name())
             .create_index(model)
             .await
             .expect("creating an index should succeed");
@@ -79,13 +82,19 @@ impl Db {
 
 #[async_trait]
 impl DbOps for Db {
-    async fn insert_ip(&self, geolocation: &GeoLocation) -> Result<ObjectId, Error> {
-        let result = self.collection.insert_one(geolocation).await?;
+    async fn insert_ip(&self, data: &Value) -> Result<ObjectId, Error> {
+        let result = self.collection.insert_one(serde_json::json!(data)).await?;
         Ok(result.inserted_id.as_object_id().unwrap())
     }
-    async fn get_ip(&self, ip: String) -> Result<Option<GeoLocation>, Error> {
-        let get_geolocation = self.collection.find_one(doc! { "ip": &ip }).await?;
-        Ok(get_geolocation)
+    async fn get_ip(&self, ip: String) -> Result<Option<Value>, Error> {
+        let filter = doc! { "query": ip };
+        let mut ip_data = self.collection.find_one(filter).await?;
+
+        if let Some(ref mut doc) = ip_data {
+            doc.as_object_mut().unwrap().remove("_id");
+        }
+
+        Ok(ip_data)
     }
     //     // async fn delete_ip(&self, ip: String) -> Result<DeleteResult, Error> {
     //     //     let delete_result = self.collection.delete_one(doc! { "query": &ip }, None).await?;
