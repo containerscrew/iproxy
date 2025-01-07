@@ -22,14 +22,12 @@ package: ## Package binary with zip
 git-cliff: ## Run git cliff
 	git cliff --output CHANGELOG.md
 
-run-with-autoreload: ## Run the API with autoreload. Run: $ cargo install cargo-watch systemfd
-	systemfd --no-pid -s http::3000 -- cargo watch -w src -x run
-
-create-iproxy-network: ## Create iproxy network
-	podman network create iproxy
-
 local-dev: ## Start local development
+	podman rm -f mongo || true ;\
 	podman run -itd --rm --name mongo -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=admin -e MONGO_INITDB_DATABASE=iproxy docker.io/mongo:latest
+
+run-with-autoreload: local-dev ## Run the API with autoreload. Run: $ cargo install cargo-watch systemfd
+	systemfd --no-pid -s http::3000 -- cargo watch -w src -x run
 
 compose-up: ## Run podman-compose
 	podman-compose -f compose.yml up -d
