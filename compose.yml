@@ -16,7 +16,7 @@ services:
     # build:
     #   context: .
     #   dockerfile: ./Dockerfile
-    image: docker.io/containerscrew/iproxy:v0.2.0
+    image: docker.io/containerscrew/iproxy:v0.3.0
     restart: unless-stopped
     container_name: iproxy
     networks:
