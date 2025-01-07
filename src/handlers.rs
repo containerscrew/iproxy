@@ -18,7 +18,6 @@ pub async fn get_ip(
     Path(ip): Path<String>,
     State(app_state): State<Arc<AppState>>,
 ) -> Result<impl IntoResponse, (StatusCode, Json<serde_json::Value>)> {
-
     debug!("ip requested: {}", &ip);
 
     // Try to get IP data from the database
@@ -48,7 +47,7 @@ pub async fn get_ip(
     match get_geolocation(&ip, app_state.use_proxy).await {
         Ok(Json(ip_geolocation)) => {
             debug!("retriveing geolocation data for {}", &ip);
-            
+
             // Try to insert the geolocation data into the database
             match app_state.db.insert_ip(&ip_geolocation).await {
                 Ok(_) => debug!("Ip {} registered in database", ip),
