@@ -3,9 +3,9 @@ use rand::seq::SliceRandom;
 use reqwest::{Client, Error, Proxy, StatusCode};
 use serde_json::Value;
 use std::time::Duration;
-use tracing::{error, info, trace, warn};
+use tracing::{error, trace, warn};
 
-const IP_API_ENDPOINT: &str = "http://ip-api.com/";
+const IP_API_ENDPOINT: &str = "http://ip-api.com/json/";
 const MAX_RETRIES: usize = 5; // Maximum number of retries if the request fails
 
 const USER_AGENTS: &[&str] = &[

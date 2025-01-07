@@ -1,8 +1,6 @@
 #! /bin/bash
 
-echo -e "Generating a random password for the database...\n"
-openssl rand -base64 48
+echo -e "Creating mongodb root password\n"
+openssl rand -base64 48 | tr -dc 'a-zA-Z0-9' | head -c 48
 
-cp .env-example .env
-echo -e "\nPlease update the compose.yml file with the database password generated above"
-echo -e "Please update config.toml with the same username/password\n"
+echo -e "Now change the password in config.toml and compose.yml\n"

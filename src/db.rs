@@ -1,11 +1,10 @@
 use async_trait::async_trait;
-use bson::{doc, Bson};
+use bson::doc;
 use bson::oid::ObjectId;
 use mongodb::error::Error;
-use mongodb::options::{ClientOptions, FindOneOptions, IndexOptions, ServerApi, ServerApiVersion};
+use mongodb::options::{ClientOptions, IndexOptions, ServerApi, ServerApiVersion};
 use mongodb::{Client, Collection, Database, IndexModel};
 use serde_json::Value;
-use std::iter::Filter;
 use std::time::Duration;
 use tracing::{error, info};
 

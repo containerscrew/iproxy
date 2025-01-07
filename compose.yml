@@ -34,7 +34,7 @@ services:
     restart: unless-stopped
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=changeme
+      - MONGO_INITDB_ROOT_PASSWORD=mongodbpassword
       - MONGO_INITDB_DATABASE=iproxy
     volumes:
       - iproxy_mongodb:/data/db
